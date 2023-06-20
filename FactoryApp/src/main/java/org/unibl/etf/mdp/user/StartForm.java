@@ -68,7 +68,13 @@ public class StartForm extends JFrame {
 		JButton usersButton = new JButton("CHECK USERS");
 		usersButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				try {
+					ArrayList<User> existingUsers = readExistsingUsers();
+					UsersForm uf = new UsersForm();
+					uf.populateData(existingUsers);
+				} catch(Exception ex) {
+					ex.printStackTrace();
+				}				
 			}
 		});
 		usersButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -78,6 +84,7 @@ public class StartForm extends JFrame {
 		JButton btnRegister = new JButton("PRODUCTS");
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -90,8 +97,7 @@ public class StartForm extends JFrame {
 				try {
 					File sourceDir = new File(REQUESTS_PATH);
 					File[] files = sourceDir.listFiles();
-					Gson gson = new Gson();
-					ArrayList<User> existingUsers = readExistsingUsers();
+					Gson gson = new Gson();					
 					ArrayList<User> requestUsers = new ArrayList<>();
 					for(File file : files) {
 						BufferedReader br = new BufferedReader(new FileReader(file));
@@ -99,22 +105,12 @@ public class StartForm extends JFrame {
 						while((line = br.readLine()) != null) 
 							jsonObject += line;
 						User user = gson.fromJson(jsonObject, User.class);
-						//System.out.println(user);
 						requestUsers.add(user);
-						
-						/*for(User usr : existingUsers) {
-							if(usr.getUserName() == user.getUserName()) {
-								br.close();
-								throw new Exception("Same user name!");
-							}
-						}
-						PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(USERS_PATH)));
-						pw.println(gson.toJson(user));
-						System.out.println("UPISAO KORISNIKA U FAJL");*/
+						br.close();
 					}
 					RequestsForm rf = new RequestsForm();
 					rf.populateData(requestUsers);
-					rf.setVisible(true);
+					//rf.setVisible(true);
 				} catch(Exception ex) {
 					ex.printStackTrace();
 				}
@@ -130,17 +126,25 @@ public class StartForm extends JFrame {
 		contentPane.add(promotionTextButton);
 	}
 	
-	private ArrayList<User> readExistsingUsers() throws Exception {
+	public static ArrayList<User> readExistsingUsers() throws Exception {
 		Gson gson = new Gson();
 		File f = new File(USERS_PATH);
 		f.createNewFile();
 		ArrayList<User> users = new ArrayList<>();
 		BufferedReader br = new BufferedReader(new FileReader(f));
-		String line="", jsonObject="";
+		String line="", content="";
 		while((line = br.readLine()) != null) {
-			jsonObject += line;
-			users.add(gson.fromJson(jsonObject, User.class));
+			content += line;
 		}
+		System.out.println("CONTENT = " + content);
+		if(!"".equals(content)) {
+			String[] split = content.split("}");
+			for(int i=0; i<split.length; i++) {		
+				split[i]+="}";
+				users.add(gson.fromJson(split[i], User.class));
+			}
+		}		
+		br.close();
 		return users;
 	}
 

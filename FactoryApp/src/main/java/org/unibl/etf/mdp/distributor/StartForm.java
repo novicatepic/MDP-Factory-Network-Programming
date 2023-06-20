@@ -51,27 +51,27 @@ public class StartForm extends JFrame {
 		lblNewLabel.setBounds(31, 10, 375, 42);
 		contentPane.add(lblNewLabel);
 		
-		JButton loginButton = new JButton("LOGIN");
-		loginButton.addActionListener(new ActionListener() {
+		JButton connectionButton = new JButton("CONNECT WITH DISTRIBUTOR");
+		connectionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AfterLoginForm alf = new AfterLoginForm();
 				alf.setVisible(true);
 			}
 		});
-		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		loginButton.setBounds(41, 71, 334, 58);
-		contentPane.add(loginButton);
+		connectionButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		connectionButton.setBounds(41, 71, 334, 58);
+		contentPane.add(connectionButton);
 		
-		JButton btnRegister = new JButton("REGISTER");
-		btnRegister.addActionListener(new ActionListener() {
+		JButton productsButton = new JButton("CHECK PRODUCTS");
+		productsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RegisterUserForm ruf = new RegisterUserForm();
 				ruf.setVisible(true);
 			}
 		});
-		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnRegister.setBounds(41, 166, 334, 58);
-		contentPane.add(btnRegister);
+		productsButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		productsButton.setBounds(41, 166, 334, 58);
+		contentPane.add(productsButton);
 	}
 
 }

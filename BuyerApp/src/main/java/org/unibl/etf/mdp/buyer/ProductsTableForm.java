@@ -1,18 +1,34 @@
 package org.unibl.etf.mdp.buyer;
-
 import java.awt.EventQueue;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import org.unibl.etf.mdp.buyer.model.Product;
+
+import com.google.gson.Gson;
+
 import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.awt.event.ActionEvent;
 
 public class ProductsTableForm extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -33,27 +49,54 @@ public class ProductsTableForm extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	JFrame frame = new JFrame("Requests table");
 	public ProductsTableForm() {
-		JFrame frmProductsTable = new JFrame("2x2 JTable");
-		frmProductsTable.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frmProductsTable.setTitle("Products table");
-		
-        Object[][] data = {
-            {"Row 1, Col 1", "Row 1, Col 2"},
-            {"Row 2, Col 1", "Row 2, Col 2"}
-        };
-
-        String[] columnHeaders = {"Column 1", "Column 2"};
-        frmProductsTable.getContentPane().setLayout(null);
-
-        JTable table = new JTable(data, columnHeaders);
+        JButton rejectButt = new JButton("REJECT");
+        rejectButt.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        	}
+        });
+        frame.getContentPane().setLayout(null);
+        rejectButt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        rejectButt.setBounds(69, 328, 373, 100);
+        frame.getContentPane().add(rejectButt);
+        
+        JButton acceptButt = new JButton("ACCEPT");
+        acceptButt.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        acceptButt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        acceptButt.setBounds(519, 328, 373, 100);
+        frame.getContentPane().add(acceptButt);
+        frame.setSize(1000, 500);
+        frame.setResizable(false);
+        frame.setVisible(true);
+	}
+	JTable table;
+	private List<Product> products = new ArrayList<>();
+	private DefaultTableModel model;
+	public void populateData(List<Product> ps) {
+		this.products = ps;
+		Object[] columnHeaders = {"Name", "Amount", "Price"};
+		System.out.println("USERSSIZE="+products.size());
+		Object[][] data = new Object[products.size()][3];
+		for(int i=0; i<products.size();i++) {
+			for(int j=0; j<3; j++) {
+				if(j==0) {
+					data[i][j]=products.get(i).getName();
+				} else if(j==1) {
+					data[i][j]=products.get(i).getAmount();
+				} else if(j==2) {
+					data[i][j]=products.get(i).getPrice();
+				} 
+			}
+		}
+		model = new DefaultTableModel(data, columnHeaders);
+		table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 0, 986, 290);
-
-        frmProductsTable.getContentPane().add(scrollPane);
-        frmProductsTable.setSize(1000, 500);
-        frmProductsTable.setResizable(false);
-        frmProductsTable.setVisible(true);
-		
+        scrollPane.setBounds(10, 0, 976, 276);
+        frame.getContentPane().add(scrollPane);
 	}
 }

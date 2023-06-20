@@ -1,0 +1,2 @@
+{"name":"pr1","amount":12,"price":12.4}
+{"name":"pr2","amount":13,"price":12.5}

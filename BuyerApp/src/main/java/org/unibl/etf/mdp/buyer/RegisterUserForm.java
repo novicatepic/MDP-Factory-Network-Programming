@@ -146,6 +146,8 @@ public class RegisterUserForm extends JFrame {
 					Client client = ClientBuilder.newClient();
 					WebTarget target = client.target(URI_BASE);
 					Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(user, MediaType.APPLICATION_JSON));
+					response.close();
+					client.close();
 				} catch(Exception ex) {
 					ex.printStackTrace();
 				}				

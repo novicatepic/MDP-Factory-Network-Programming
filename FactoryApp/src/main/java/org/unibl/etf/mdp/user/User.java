@@ -9,6 +9,7 @@ public class User implements Serializable {
 	private String contactPhone;
 	private String userName;
 	private String password;
+	private boolean suspended=false;
 	
 	public User() {
 		super();
@@ -67,6 +68,14 @@ public class User implements Serializable {
 	public String toString() {
 		return "User [companyName=" + companyName + ", address=" + address + ", contactPhone=" + contactPhone
 				+ ", userName=" + userName + ", password=" + password + "]";
+	}
+	
+	public boolean isSuspended() {
+		return suspended;
+	}
+
+	public void setSuspended(boolean suspended) {
+		this.suspended = suspended;
 	}
 	
 }

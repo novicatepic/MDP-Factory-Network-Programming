@@ -1,10 +1,13 @@
-package org.unibl.etf.mdp.buyer;
+package org.unibl.etf.mdp.distributor;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.unibl.etf.mdp.model.Distributor;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -19,6 +22,9 @@ public class StartForm extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	
+	public static Distributor distributor = new Distributor();
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -51,27 +57,27 @@ public class StartForm extends JFrame {
 		lblNewLabel.setBounds(31, 10, 375, 42);
 		contentPane.add(lblNewLabel);
 		
-		JButton loginButton = new JButton("LOGIN");
-		loginButton.addActionListener(new ActionListener() {
+		JButton nameButton = new JButton("ADD NAME");
+		nameButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AfterLoginForm alf = new AfterLoginForm();
-				alf.setVisible(true);
+				NameForm nf = new NameForm();
+				nf.setVisible(true);
 			}
 		});
-		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		loginButton.setBounds(41, 71, 334, 58);
-		contentPane.add(loginButton);
+		nameButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nameButton.setBounds(41, 71, 334, 58);
+		contentPane.add(nameButton);
 		
-		JButton btnRegister = new JButton("REGISTER");
-		btnRegister.addActionListener(new ActionListener() {
+		JButton productButton = new JButton("ADD PRODUCT");
+		productButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegisterUserForm ruf = new RegisterUserForm();
-				ruf.setVisible(true);
+				ProductForm pf = new ProductForm();
+				pf.setVisible(true);
 			}
 		});
-		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnRegister.setBounds(41, 166, 334, 58);
-		contentPane.add(btnRegister);
+		productButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		productButton.setBounds(41, 166, 334, 58);
+		contentPane.add(productButton);
 	}
 
 }
