@@ -1,20 +1,20 @@
-package org.unibl.etf.mdp.buyer;
+package org.unibl.etf.mdp.user;
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import org.unibl.etf.mdp.buyer.model.Product;
+import org.unibl.etf.mdp.product.Product;
+import org.unibl.etf.mdp.product.ProductService;
 
 import com.google.gson.Gson;
-
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionListener;
@@ -26,7 +26,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.awt.event.ActionEvent;
 
-public class ProductsTableForm extends JFrame {
+public class ProductsForm extends JFrame {
 
 	private JPanel contentPane;
 
@@ -37,7 +37,7 @@ public class ProductsTableForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProductsTableForm frame = new ProductsTableForm();
+					ProductsForm frame = new ProductsForm();
 					//frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,26 +50,54 @@ public class ProductsTableForm extends JFrame {
 	 * Create the frame.
 	 */
 	JFrame frame = new JFrame("Requests table");
-	public ProductsTableForm() {
-        JButton rejectButt = new JButton("REJECT");
-        rejectButt.addActionListener(new ActionListener() {
+	public ProductsForm() {
+        JButton createProduct = new JButton("CREATE");
+        createProduct.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		
+        		CreateForm cf = new CreateForm();
+        		cf.setVisible(true);
         	}
         });
         frame.getContentPane().setLayout(null);
-        rejectButt.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        rejectButt.setBounds(69, 328, 373, 100);
-        frame.getContentPane().add(rejectButt);
+        createProduct.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        createProduct.setBounds(69, 328, 112, 100);
+        frame.getContentPane().add(createProduct);
         
-        JButton acceptButt = new JButton("ACCEPT");
-        acceptButt.addActionListener(new ActionListener() {
+        JButton updateButton = new JButton("UPDATE");
+        updateButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		int selectedNum = table.getSelectedRow();
+        		Product p = products.get(selectedNum);
+        		UpdateForm uf = new UpdateForm();
+        		uf.populateData(p);
+        		uf.setVisible(true);
         	}
         });
-        acceptButt.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        acceptButt.setBounds(519, 328, 373, 100);
-        frame.getContentPane().add(acceptButt);
+        updateButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        updateButton.setBounds(228, 328, 112, 100);
+        frame.getContentPane().add(updateButton);
+        
+        JButton deleteButton = new JButton("DELETE");
+        deleteButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		int selectedRow = table.getSelectedRow();
+        		model.removeRow(selectedRow);
+        		String name="";
+        		for(int i=0; i<products.size(); i++) {
+        			if(selectedRow == i) {
+        				name = products.get(i).getName();
+        				products.remove(i);
+        			}
+        		}
+        		System.out.println("NAME="+name);
+        		if(!"".equals(name)) {
+        			ProductService.deleteProduct(name);
+        		}       		
+        	}
+        });
+        deleteButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        deleteButton.setBounds(386, 328, 112, 100);
+        frame.getContentPane().add(deleteButton);
         frame.setSize(1000, 500);
         frame.setResizable(false);
         frame.setVisible(true);
@@ -95,6 +123,7 @@ public class ProductsTableForm extends JFrame {
 		}
 		model = new DefaultTableModel(data, columnHeaders);
 		table = new JTable(model);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(10, 0, 976, 276);
         frame.getContentPane().add(scrollPane);

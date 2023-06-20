@@ -8,9 +8,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.unibl.etf.mdp.distributor2.ProductForm;
-import org.unibl.etf.mdp.model.Product;
+import org.unibl.etf.mdp.product.Product;
 
 import com.google.gson.Gson;
 
@@ -19,11 +20,11 @@ public class DistributorClass implements DistributorInterface {
 	public DistributorClass() throws RemoteException {}
 
 	@Override
-	public ArrayList<Product> getDistributorProducts(String name) throws RemoteException {
+	public List<Product> getDistributorProducts(String name) throws RemoteException {
 		ArrayList<Product> products = new ArrayList<>();
 		try {
 			Gson gson = new Gson();
-			File f = new File(ProductForm.PATH+name+".txt");
+			File f = new File(ProductForm.PATH+name);
 			BufferedReader br = new BufferedReader(new FileReader(f));
 			String line="", content="";
 			while((line = br.readLine()) != null) {

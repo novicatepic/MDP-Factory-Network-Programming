@@ -1,4 +1,4 @@
-package org.unibl.etf.mdp.distributor;
+package org.unibl.etf.mdp.distributor2;
 
 import java.awt.EventQueue;
 

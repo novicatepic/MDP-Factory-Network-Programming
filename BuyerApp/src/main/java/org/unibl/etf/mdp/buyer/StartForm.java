@@ -10,21 +10,49 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.awt.event.ActionEvent;
 
 public class StartForm extends JFrame {
 
+	public static final int MULTICAST_PORT=20000;
+	public static final String HOST="224.0.0.11";
 	private JPanel contentPane;
-
+	private static JLabel messageLabel = new JLabel("");
 	/**
 	 * Launch the application.
 	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					StartForm frame = new StartForm();
 					frame.setVisible(true);
+					//MulticastSocket socket = null;					
+					new Thread(new Runnable() {						
+						@Override
+						public void run() {
+							try {
+								MulticastSocket socket =  new MulticastSocket(MULTICAST_PORT);
+								byte[] buffer = new byte[256];
+								InetAddress address = InetAddress.getByName(HOST);
+								socket.joinGroup(address);
+								while(true) {
+									DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+									socket.receive(packet);
+									String received = new String(packet.getData(), 0, packet.getLength());
+									System.out.println(received); 
+									messageLabel.setText(received);	
+								}									
+							} catch(IOException ex) {
+								ex.printStackTrace();
+							}										
+						}
+					}).start();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -38,7 +66,7 @@ public class StartForm extends JFrame {
 	public StartForm() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
-		setBounds(100, 100, 452, 300);
+		setBounds(100, 100, 677, 484);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -54,8 +82,8 @@ public class StartForm extends JFrame {
 		JButton loginButton = new JButton("LOGIN");
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AfterLoginForm alf = new AfterLoginForm();
-				alf.setVisible(true);
+				LoginForm lf = new LoginForm();
+				lf.setVisible(true);
 			}
 		});
 		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -72,6 +100,11 @@ public class StartForm extends JFrame {
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnRegister.setBounds(41, 166, 334, 58);
 		contentPane.add(btnRegister);
+		
+		
+		messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		messageLabel.setBounds(41, 263, 580, 156);
+		contentPane.add(messageLabel);
 	}
 
 }

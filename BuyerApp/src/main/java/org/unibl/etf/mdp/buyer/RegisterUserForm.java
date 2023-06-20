@@ -52,7 +52,7 @@ public class RegisterUserForm extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public static final String URI_BASE = "http://localhost:8080/BuyerProject/api/register/";
+	public static final String URI_BASE = "http://localhost:8080/Factory/api/register/";
 	
 	public RegisterUserForm() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

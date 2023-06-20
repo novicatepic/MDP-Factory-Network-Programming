@@ -49,7 +49,7 @@ public class AfterLoginForm extends JFrame {
 	 * Create the frame.
 	 */
 	public AfterLoginForm() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setBounds(100, 100, 452, 300);
 		contentPane = new JPanel();

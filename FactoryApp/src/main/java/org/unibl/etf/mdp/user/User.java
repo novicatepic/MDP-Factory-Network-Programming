@@ -24,6 +24,12 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
+	public User(String userName, String password) {
+		super();
+		this.userName = userName;
+		this.password = password;
+	}
+
 	public String getCompanyName() {
 		return companyName;
 	}

@@ -1,0 +1,7 @@
+<root>
+  <facet id="jpt.jaxb">
+    <node name="classgen">
+      <attribute name="package" value="org.unibl.etf.mdp.xml"/>
+    </node>
+  </facet>
+</root>

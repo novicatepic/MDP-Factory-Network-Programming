@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.unibl.etf.mdp.product.ProductService;
+
 import com.google.gson.Gson;
 
 import javax.swing.JLabel;
@@ -26,8 +28,6 @@ public class StartForm extends JFrame {
 
 	public static final String REQUESTS_PATH = ".." + File.separator + "RegistrationRequests" + File.separator;
 	public static final String USERS_PATH = ".." + File.separator + "Users" + File.separator + "users.json";
-	private static ArrayList<User> blogs = new ArrayList<>();
-	
 	private JPanel contentPane;
 
 	/**
@@ -46,9 +46,6 @@ public class StartForm extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public StartForm() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -84,7 +81,8 @@ public class StartForm extends JFrame {
 		JButton btnRegister = new JButton("PRODUCTS");
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				ProductsForm pf = new ProductsForm();
+				pf.populateData(ProductService.readProducts());
 			}
 		});
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -121,6 +119,12 @@ public class StartForm extends JFrame {
 		contentPane.add(requestsButton);
 		
 		JButton promotionTextButton = new JButton("WRITE PROMOTION TEXT");
+		promotionTextButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PromotionTextForm ptf = new PromotionTextForm();
+				ptf.setVisible(true);
+			}
+		});
 		promotionTextButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		promotionTextButton.setBounds(41, 345, 334, 58);
 		contentPane.add(promotionTextButton);
@@ -136,7 +140,6 @@ public class StartForm extends JFrame {
 		while((line = br.readLine()) != null) {
 			content += line;
 		}
-		System.out.println("CONTENT = " + content);
 		if(!"".equals(content)) {
 			String[] split = content.split("}");
 			for(int i=0; i<split.length; i++) {		
