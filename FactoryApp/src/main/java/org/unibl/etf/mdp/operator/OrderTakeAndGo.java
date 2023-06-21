@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import org.unibl.etf.mdp.model.Operator;
+import org.unibl.etf.mdp.model.User;
 import org.unibl.etf.mdp.mq.ConnectionFactoryUtil;
-import org.unibl.etf.mdp.user.User;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.AMQP;
@@ -80,6 +80,8 @@ public class OrderTakeAndGo extends JFrame {
 				try {
 					ProcessOrderForm pof = new ProcessOrderForm();
 					//pof.setXML(processOrder());
+					pof.setOperator(operator);
+					pof.setXML();
 					pof.setVisible(true);
 				} catch(Exception ex) {
 					ex.printStackTrace();
@@ -90,6 +92,11 @@ public class OrderTakeAndGo extends JFrame {
 		processButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		processButton.setBounds(44, 86, 334, 58);
 		contentPane.add(processButton);
+	}
+	
+	private String operator;
+	public void setOperator(String op) {
+		this.operator = op;
 	}
 
 }

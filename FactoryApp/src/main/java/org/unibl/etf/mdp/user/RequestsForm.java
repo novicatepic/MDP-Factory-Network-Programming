@@ -12,6 +12,8 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import org.unibl.etf.mdp.model.User;
+
 import com.google.gson.Gson;
 
 import javax.swing.JButton;
@@ -95,7 +97,7 @@ public class RequestsForm extends JFrame {
             			boolean duplicate = false;
             			for(User eu : existingUsers) {
             				if(su.getAddress().equals(eu.getAddress()) || su.getUserName().equals(eu.getUserName())) {
-            					duplicate = true;
+            					throw new Exception("Duplicate user!");
             				}
             			}
             			if(duplicate == false) {  

@@ -1,0 +1,1 @@
+{"name":"prd2","amount":12,"price":50.0}

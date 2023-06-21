@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.unibl.etf.mdp.buyer.model.User;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -52,7 +53,11 @@ public class RegisterUserForm extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public static final String URI_BASE = "http://localhost:8080/Factory/api/register/";
+	{
+		URI_BASE=PropertiesService.getElement("REGISTER_REST");
+	}
+	
+	private static String URI_BASE;
 	
 	public RegisterUserForm() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

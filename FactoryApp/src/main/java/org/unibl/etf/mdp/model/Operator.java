@@ -22,6 +22,11 @@ public class Operator {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+	
+	@Override
+	public String toString() {
+		return "Operator [userName=" + userName + "]";
+	}
 
 	@Override
 	public int hashCode() {

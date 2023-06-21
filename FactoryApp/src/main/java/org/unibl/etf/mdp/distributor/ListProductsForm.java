@@ -12,8 +12,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import org.unibl.etf.mdp.product.Product;
+import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.product.ProductService;
+import org.unibl.etf.mdp.rmi.DistributorInterface;
 
 import com.google.gson.Gson;
 
@@ -26,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -79,14 +82,20 @@ public class ListProductsForm extends JFrame {
             				ProductService.addProduct(products.get(i));
             			}
             		}
-            		File f = new File(file);
+            		String name="Distributor";
+					Registry registry = LocateRegistry.getRegistry(1099);
+					DistributorInterface dif = (DistributorInterface) registry.lookup(name);
+					//System.out.println(file);
+					//String[] parse = file.split("\\");
+					dif.writeUpdatedProducts(products);
+            		/*File f = new File(file);
             		f.delete();
             		Gson gson = new Gson();
             		PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
             		for(Product p : products) {
             			pw.println(gson.toJson(p));
             		}
-            		pw.close();
+            		pw.close();*/
         		} catch(Exception ex) {
         			ex.printStackTrace();
         		}       		

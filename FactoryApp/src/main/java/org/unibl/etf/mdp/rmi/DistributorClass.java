@@ -1,8 +1,12 @@
 package org.unibl.etf.mdp.rmi;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -10,21 +14,22 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.distributor2.ProductForm;
-import org.unibl.etf.mdp.product.Product;
 
 import com.google.gson.Gson;
 
 public class DistributorClass implements DistributorInterface {
 	public static final String PATH = "resources";
 	public DistributorClass() throws RemoteException {}
-
+	private String fileName;
 	@Override
 	public List<Product> getDistributorProducts(String name) throws RemoteException {
 		ArrayList<Product> products = new ArrayList<>();
 		try {
 			Gson gson = new Gson();
 			File f = new File(ProductForm.PATH+name);
+			fileName=ProductForm.PATH+name;
 			BufferedReader br = new BufferedReader(new FileReader(f));
 			String line="", content="";
 			while((line = br.readLine()) != null) {
@@ -46,6 +51,19 @@ public class DistributorClass implements DistributorInterface {
 		return products;
 	}
 	
+
+	@Override
+	public void writeUpdatedProducts(List<Product> products) throws RemoteException, IOException {
+		File f = new File(fileName);
+		f.delete();
+		Gson gson = new Gson();
+		PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(fileName,true)),true);
+		for(Product p : products) {
+			pw.println(gson.toJson(p));
+		}
+		pw.close();
+	}
+	
 	public static void main(String[] args) throws Exception {
 		/*ArrayList<Product> prs = new DistributorClass().getDistributorProducts("D1");
 		for(Product p : prs) {
@@ -64,6 +82,4 @@ public class DistributorClass implements DistributorInterface {
 			e.printStackTrace();
 		}
 	}
-	
-	
 }

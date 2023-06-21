@@ -5,8 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.unibl.etf.mdp.model.User;
 import org.unibl.etf.mdp.rmi.DistributorInterface;
-import org.unibl.etf.mdp.user.User;
 
 import com.google.gson.Gson;
 
@@ -45,9 +46,7 @@ public class ChooseWhoToBuyFromForm extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+
 	private JComboBox disBox = new JComboBox();
 	public static final String PATH = "resources";
 	public ChooseWhoToBuyFromForm() {
@@ -77,7 +76,7 @@ public class ChooseWhoToBuyFromForm extends JFrame {
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					File f = new File(StartForm.DISTRIBUTORS_PATH);
+					File f = new File(StartDistributorForm.DISTRIBUTORS_PATH);
 					File[] files = f.listFiles();
 					String selectedItem = (String)disBox.getSelectedItem();
 					String fileName="";
@@ -97,8 +96,9 @@ public class ChooseWhoToBuyFromForm extends JFrame {
 						Registry registry = LocateRegistry.getRegistry(1099);
 						DistributorInterface dif = (DistributorInterface) registry.lookup(name);
 						//System.out.println(fileName);
-						lif.populateData(dif.getDistributorProducts(StartForm.DISTRIBUTORS_PATH+fileName));
-						lif.setFile(StartForm.DISTRIBUTORS_PATH+fileName);
+						lif.populateData(dif.getDistributorProducts(StartDistributorForm.DISTRIBUTORS_PATH+fileName));
+						//lif.populateData(dif.getDistributorProducts(fileName));
+						lif.setFile(StartDistributorForm.DISTRIBUTORS_PATH+fileName);
 						//lif.setVisible(true);
 					}
 				} catch(Exception ex) {

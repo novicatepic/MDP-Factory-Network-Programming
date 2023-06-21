@@ -1,0 +1,1 @@
+PRIHVACENA NARUDZBA Order [userName=novicapravi, address=novica.tepic@student.etf.unibl.org, products=[Ljava.lang.Object;@7f5fa6b2, amounts=[Ljava.lang.Object;@771fe2cf] OD OPERATORA Operator [userName=Operator2]

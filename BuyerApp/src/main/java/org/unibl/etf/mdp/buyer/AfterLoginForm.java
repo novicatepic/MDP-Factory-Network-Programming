@@ -15,12 +15,15 @@ import javax.ws.rs.core.Response;
 
 import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.buyer.model.User;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
@@ -44,7 +47,11 @@ public class AfterLoginForm extends JFrame {
 		});
 	}
 
-	public static final String URI_BASE = "http://localhost:8080/Factory/api/products/";
+	{
+		URI_BASE=PropertiesService.getElement("PRODUCTS_REST");
+	}
+	
+	private static String URI_BASE;
 	
 	/**
 	 * Create the frame.

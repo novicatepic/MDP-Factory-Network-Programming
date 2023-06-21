@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.unibl.etf.mdp.properties.PropertiesService;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -16,17 +19,22 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.awt.event.ActionEvent;
 
+
 public class StartForm extends JFrame {
 
-	public static final int MULTICAST_PORT=20000;
-	public static final String HOST="224.0.0.11";
+	private static int MULTICAST_PORT;
+	private static String HOST;
 	private JPanel contentPane;
 	private static JLabel messageLabel = new JLabel("");
-	/**
-	 * Launch the application.
-	 */
+	
+	{
+		MULTICAST_PORT=Integer.valueOf(PropertiesService.getElement("MULTICAST_PORT"));
+		HOST=PropertiesService.getElement("HOST");
+		//System.out.println(HOST + " " + MULTICAST_PORT);
+	}
 	
 	public static void main(String[] args) {
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

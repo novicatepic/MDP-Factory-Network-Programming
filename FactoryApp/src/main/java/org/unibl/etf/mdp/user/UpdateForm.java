@@ -12,8 +12,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.unibl.etf.mdp.product.Product;
+import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.product.ProductService;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -49,7 +50,11 @@ public class UpdateForm extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public static final String URI_BASE = "http://localhost:8080/Factory/api/register/";
+	{
+		URI_BASE = PropertiesService.getElement("REGISTER_REST");
+	}
+	
+	public static String URI_BASE;
 	
 	public UpdateForm() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

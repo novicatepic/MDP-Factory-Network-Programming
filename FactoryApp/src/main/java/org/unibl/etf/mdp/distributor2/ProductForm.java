@@ -1,16 +1,15 @@
 package org.unibl.etf.mdp.distributor2;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.model.Distributor;
-import org.unibl.etf.mdp.product.Product;
+import org.unibl.etf.mdp.product.ProductService;
 
 import com.google.gson.Gson;
-
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -107,6 +106,10 @@ public class ProductForm extends JFrame {
 					
 					if(amount<0 || price<0) {
 						throw new Exception("Amount or price lower than zero!");
+					}
+					
+					if(ProductService.containsProduct(name)) {
+						throw new Exception("Product already exists!");
 					}
 					
 					Product newProduct = new Product(name, amount, price);

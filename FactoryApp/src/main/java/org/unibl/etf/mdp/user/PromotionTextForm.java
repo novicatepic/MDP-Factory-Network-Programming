@@ -11,6 +11,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.unibl.etf.mdp.properties.PropertiesService;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -23,8 +26,14 @@ import java.net.MulticastSocket;
 import java.awt.event.ActionEvent;
 
 public class PromotionTextForm extends JFrame {
-	private static final int MULTICAST_PORT = 20000;
-	private static final String MULTICAST_HOST = "224.0.0.11";
+	
+	{
+		MULTICAST_PORT = Integer.valueOf(PropertiesService.getElement("MULTICAST_PORT")); 
+		MULTICAST_HOST = PropertiesService.getElement("HOST"); 
+	}
+	
+	private static int MULTICAST_PORT;
+	private static String MULTICAST_HOST;
 	private JPanel contentPane;
 	private JTextField messageField;
 

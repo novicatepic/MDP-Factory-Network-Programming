@@ -1,4 +1,4 @@
-package org.unibl.etf.mdp.user;
+package org.unibl.etf.mdp.model;
 
 import java.io.Serializable;
 

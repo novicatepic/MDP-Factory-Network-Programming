@@ -1,4 +1,4 @@
-package org.unibl.etf.mdp.product;
+package org.unibl.etf.mdp.buyer.model;
 
 import java.io.Serializable;
 import java.util.Objects;

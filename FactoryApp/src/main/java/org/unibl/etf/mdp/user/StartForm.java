@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.unibl.etf.mdp.distributor.StartDistributorForm;
+import org.unibl.etf.mdp.model.User;
 import org.unibl.etf.mdp.product.ProductService;
 
 import com.google.gson.Gson;
@@ -49,7 +51,7 @@ public class StartForm extends JFrame {
 	public StartForm() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
-		setBounds(100, 100, 456, 477);
+		setBounds(100, 100, 458, 546);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -128,6 +130,17 @@ public class StartForm extends JFrame {
 		promotionTextButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		promotionTextButton.setBounds(41, 345, 334, 58);
 		contentPane.add(promotionTextButton);
+		
+		JButton connectWithDistributorButton = new JButton("CONNECT WITH DISTRIBUTOR");
+		connectWithDistributorButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StartDistributorForm sdf = new StartDistributorForm();
+				sdf.setVisible(true);
+			}
+		});
+		connectWithDistributorButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		connectWithDistributorButton.setBounds(41, 427, 334, 58);
+		contentPane.add(connectWithDistributorButton);
 	}
 	
 	public static ArrayList<User> readExistsingUsers() throws Exception {
@@ -150,5 +163,4 @@ public class StartForm extends JFrame {
 		br.close();
 		return users;
 	}
-
 }

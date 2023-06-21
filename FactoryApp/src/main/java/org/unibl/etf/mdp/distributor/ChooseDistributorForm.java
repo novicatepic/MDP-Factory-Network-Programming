@@ -69,8 +69,8 @@ public class ChooseDistributorForm extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String str = (String)disBox.getSelectedItem();
-					StartForm.distributors.add(str);
-					File f = new File(StartForm.FACTORY_DISTRIBUTORS_PATH+str);
+					StartDistributorForm.distributors.add(str);
+					File f = new File(StartDistributorForm.FACTORY_DISTRIBUTORS_PATH+str);
 					f.createNewFile();
 				} catch(Exception ex) {
 					ex.printStackTrace();

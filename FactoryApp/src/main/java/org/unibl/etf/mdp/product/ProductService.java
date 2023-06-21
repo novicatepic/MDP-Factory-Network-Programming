@@ -1,6 +1,16 @@
 package org.unibl.etf.mdp.product;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import org.unibl.etf.mdp.buyer.model.Product;
+import org.unibl.etf.mdp.model.User;
+
+import com.google.gson.Gson;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -8,12 +18,6 @@ public class ProductService {
 
 	public static ArrayList<Product> products = new ArrayList<>();
 	public static String instanceName = "Product";
-	
-	/*static {
-		for(int i=0;i<7;i++) {
-			products.add(new Product("Product"+i, i*4+1, i*15+22.4));
-		}
-	}*/
 	
 	private static JedisPool pool = new JedisPool("localhost");
 	private static Jedis jedis = pool.getResource();
@@ -107,16 +111,55 @@ public class ProductService {
 		return true;
 	}
 	
-	//Test
-	public static void main(String[] args) {
-		//writeProducts();
+	public static final String PATH=".."+File.separator+"Distributors"+File.separator;
+	public static ArrayList<String> productNames() throws IOException {
+		ArrayList<String> names = new ArrayList();
+		File f = new File(PATH);
+		File[] files = f.listFiles();
+		Gson gson = new Gson();
+		for(File file : files) {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String line="", content="";
+			while((line = br.readLine()) != null) {
+				content += line;
+			}
+			if(!"".equals(content)) {
+				String[] split = content.split("}");
+				for(int i=0; i<split.length; i++) {		
+					split[i]+="}";
+					Product p = gson.fromJson(split[i], Product.class);
+					names.add(p.getName());
+				}
+			}		
+			br.close();
+		}
+		ArrayList<Product> products = readProducts();
 		for(Product p : products) {
+			if(!names.contains(p.getName()))
+				names.add(p.getName());
+		}
+		return names;
+	}
+	
+	public static boolean containsProduct(String name) throws Exception {
+		ArrayList<String> names = productNames();
+		return names.contains(name);
+	}
+	
+	//Test
+	public static void main(String[] args) throws Exception {
+		//writeProducts();
+		/*for(Product p : products) {
 			System.out.println(p);
 		}
 		deleteProduct("Product0");
 		ArrayList<Product> pr = readProducts();
 		for(Product p : pr) {
 			System.out.println(p);
+		}*/
+		ArrayList<String> names = productNames();
+		for(String name : names) {
+			System.out.println(name);
 		}
 	}
 }

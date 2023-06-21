@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.unibl.etf.mdp.user.User;
+import org.unibl.etf.mdp.model.User;
 
 @Path("/register")
 public class RestRegistration {

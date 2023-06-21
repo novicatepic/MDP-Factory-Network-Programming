@@ -6,11 +6,18 @@ import java.net.ServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 
+import org.unibl.etf.mdp.properties.PropertiesService;
+
 public class SecureServer {
 
-	private static final int PORT = 8443;
+	{
+		PORT=Integer.valueOf(PropertiesService.getElement("PORT_8443"));
+		KEY_STORE_PASSWORD=PropertiesService.getElement("KEYSTORE_PASSWORD");
+	}
+	
+	private static int PORT;
 	private static final String KEY_STORE_PATH = "./keystore.jks";
-	private static final String KEY_STORE_PASSWORD = "sigurnost";
+	private static String KEY_STORE_PASSWORD;
 	
 	public static void main(String[] args) throws IOException {		
 

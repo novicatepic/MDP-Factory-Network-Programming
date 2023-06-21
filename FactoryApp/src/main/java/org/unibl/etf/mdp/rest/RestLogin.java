@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.unibl.etf.mdp.user.User;
+import org.unibl.etf.mdp.model.User;
 
 @Path("/login")
 public class RestLogin {
@@ -21,7 +21,7 @@ public class RestLogin {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addProizvod(User u) {
 		User usr = org.unibl.etf.mdp.user.UserService.checkCredentials(u);
-		if(usr != null) {
+		if(usr != null && !usr.isSuspended()) {
 			return Response.status(201).entity(usr).build();
 		} else {
 			return Response.status(500).build();

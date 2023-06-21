@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class StartForm extends JFrame {
+public class StartDistributorForm extends JFrame {
 
 	private JPanel contentPane;
 
@@ -25,7 +25,7 @@ public class StartForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					StartForm frame = new StartForm();
+					StartDistributorForm frame = new StartDistributorForm();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -34,10 +34,7 @@ public class StartForm extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	
+	//didn't put these into config file because of File.separator, this seems more precise
 	public static final String RESOURCE_PATH="resources";
 	public static final String DISTRIBUTORS_PATH=".."+File.separator+"Distributors"+File.separator;
 	public static final String FACTORY_DISTRIBUTORS_PATH=".."+File.separator+"FactoryDistributors"+File.separator;
@@ -48,14 +45,15 @@ public class StartForm extends JFrame {
 			File f = new File(FACTORY_DISTRIBUTORS_PATH);
 			File[] files = f.listFiles();
 			for(File fi : files) {
-				distributors.add(fi.getName());
+				if(!distributors.contains(fi.getName()))
+					distributors.add(fi.getName());
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public StartForm() {
+	public StartDistributorForm() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -105,6 +103,9 @@ public class StartForm extends JFrame {
 				try {
 					populateDistributors();
 					ChooseWhoToBuyFromForm c = new ChooseWhoToBuyFromForm();
+					for(String s : distributors) {
+						System.out.println("DIST="+s);
+					}
 					c.populateData(distributors);
 					c.setVisible(true);
 				} catch(Exception ex) {

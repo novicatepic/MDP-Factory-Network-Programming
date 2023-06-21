@@ -1,5 +1,2 @@
-Jedinstvenost imena proizvoda
-Jedinstvenost korisnickog imena i lozinke
 Logger
-Properties fajlovi
-Provjeriti da li je korisnik suspendovan
+Posloziti GUI prema specifikaciji

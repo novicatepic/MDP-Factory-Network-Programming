@@ -18,23 +18,8 @@ public class UserService {
 
 	public static final String PATH = "." + File.separator + "MDP-Project" + File.separator + "RegistrationRequests" + File.separator;
 	
-	static {
-		users.add(new User("a", "a", "a", "a", "a"));
-	}
 	
 	public static boolean createUser(User u) {
-		
-		/*for(User pr : users) {
-			for(String sifra : pr.getSifre()) {
-				for(String sifra2 : p.getSifre()) {
-					if(sifra.equals(sifra2)) {
-						System.out.println("VRATIO FALSE!");
-						return false;
-					}
-				}
-			}
-		}*/
-		
 		String fileName = u.getUserName();
 		Gson gson = new Gson();
 		try {

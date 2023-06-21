@@ -12,8 +12,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.unibl.etf.mdp.product.Product;
+import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.product.ProductService;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -46,11 +47,11 @@ public class CreateForm extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	{
+		URI_BASE = PropertiesService.getElement("REGISTER_REST");
+	}
 	
-	public static final String URI_BASE = "http://localhost:8080/Factory/api/register/";
+	private static String URI_BASE;
 	
 	public CreateForm() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -91,13 +92,13 @@ public class CreateForm extends JFrame {
 		valueField.setBounds(207, 163, 167, 30);
 		contentPane.add(valueField);
 		
-		JLabel lblNewLabel_1 = new JLabel("REGISTER FORM");
+		JLabel lblNewLabel_1 = new JLabel("PRODUCT FORM");
 		lblNewLabel_1.setFont(new Font("Sylfaen", Font.PLAIN, 20));
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setBounds(10, 10, 413, 39);
 		contentPane.add(lblNewLabel_1);
 		
-		JButton createProductButton = new JButton("REGISTER");
+		JButton createProductButton = new JButton("CREATE");
 		createProductButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -105,6 +106,9 @@ public class CreateForm extends JFrame {
 					Integer amount = Integer.valueOf(amountField.getText());
 					Double value = Double.valueOf(valueField.getText());
 					Product product = new Product(prName, amount, value);
+					if(ProductService.containsProduct(prName)) {
+						throw new Exception("Couldn't add product, already exists!");
+					}
 					ProductService.addProduct(product);
 				} catch(Exception ex) {
 					ex.printStackTrace();

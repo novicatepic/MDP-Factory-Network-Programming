@@ -11,9 +11,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import org.unibl.etf.mdp.product.Product;
+import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.product.ProductService;
-
 import com.google.gson.Gson;
 import javax.swing.JButton;
 import java.awt.Font;

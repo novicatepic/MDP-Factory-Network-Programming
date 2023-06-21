@@ -7,7 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import org.unibl.etf.mdp.model.Operator;
-import org.unibl.etf.mdp.user.User;
+import org.unibl.etf.mdp.model.User;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import com.google.gson.Gson;
 
@@ -49,10 +50,16 @@ public class OrderStartForm extends JFrame {
 		});
 	}
 	
-	private static final String HOST="127.0.0.1";
-	private static final int PORT = 8443;
+	{
+		HOST=PropertiesService.getElement("LOCAL_HOST");
+		PORT=Integer.valueOf(PropertiesService.getElement("PORT_8443"));
+		KEY_STORE_PASSWORD=PropertiesService.getElement("KEYSTORE_PASSWORD");
+	}
+	
+	private static String HOST;
+	private static int PORT;
 	private static final String KEY_STORE_PATH = "."+File.separator+"keystore.jks";
-	private static final String KEY_STORE_PASSWORD = "sigurnost";
+	private static String KEY_STORE_PASSWORD;
 	private JTextField userNameField;
 	
 	public OrderStartForm() {
@@ -83,11 +90,13 @@ public class OrderStartForm extends JFrame {
 					SSLSocket s = (SSLSocket) sf.createSocket(HOST, PORT);
 					BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 					PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream())), true);
-					System.out.println("UN="+userNameField.getText());
+					out.println("LOGIN");
 					out.println(userNameField.getText());
 					String response = in.readLine();
+					String operator = in.readLine();
 					if("OK".equals(response)) {
 						OrderTakeAndGo otg = new OrderTakeAndGo();
+						otg.setOperator(operator);
 						otg.setVisible(true);
 					} else {
 						throw new Exception("Invalid operator credentials!");
@@ -95,9 +104,6 @@ public class OrderStartForm extends JFrame {
 					in.close();
 					out.close();
 					s.close();
-					/*for(Operator o : operators) {
-						System.out.println(o.getUserName());
-					}*/
 				} catch(Exception ex) {
 					ex.printStackTrace();
 				}

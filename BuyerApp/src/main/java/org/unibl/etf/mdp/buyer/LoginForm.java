@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.unibl.etf.mdp.buyer.model.User;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -48,7 +49,11 @@ public class LoginForm extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public static final String URI_BASE = "http://localhost:8080/Factory/api/login/";
+	{
+		URI_BASE=PropertiesService.getElement("LOGIN_REST");
+	}
+	
+	private static String URI_BASE;
 	
 	public LoginForm() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -102,7 +107,7 @@ public class LoginForm extends JFrame {
 						alf.setUser(user2);
 						alf.setVisible(true);
 					} else {
-						throw new Exception("Non-existing account!");
+						throw new Exception("Non-existing account or suspended!");
 					}
 					response.close();
 					client.close();

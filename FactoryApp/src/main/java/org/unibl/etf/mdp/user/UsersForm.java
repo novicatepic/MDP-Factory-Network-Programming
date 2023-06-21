@@ -12,6 +12,8 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import org.unibl.etf.mdp.model.User;
+
 import com.google.gson.Gson;
 
 import javax.swing.JButton;

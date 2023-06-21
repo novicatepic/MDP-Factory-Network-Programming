@@ -3,8 +3,7 @@ package org.unibl.etf.mdp.model;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import org.unibl.etf.mdp.product.Product;
-
+import org.unibl.etf.mdp.buyer.model.Product;
 public class Distributor {
 
 	private String name;	
