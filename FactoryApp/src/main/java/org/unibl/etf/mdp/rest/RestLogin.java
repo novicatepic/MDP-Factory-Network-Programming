@@ -16,30 +16,15 @@ import org.unibl.etf.mdp.user.User;
 @Path("/login")
 public class RestLogin {
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAll() {
-		return null;
-		/*try {
-			PrintWriter pw = new PrintWriter(new FileWriter("./a.txt"));
-			pw.println("cc");
-			pw.close();
-			System.out.println("Written");
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return Response.status(200).entity(ProizvodServis.getProizvodi()).build();*/
-	}
-	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addProizvod(User u) {
-		if(org.unibl.etf.mdp.user.UserService.checkCredentials(u)) {
-			return Response.status(201).build();
+		User usr = org.unibl.etf.mdp.user.UserService.checkCredentials(u);
+		if(usr != null) {
+			return Response.status(201).entity(usr).build();
 		} else {
 			return Response.status(500).build();
 		}
 	}
-	
 }

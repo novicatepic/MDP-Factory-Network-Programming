@@ -41,22 +41,25 @@ public class UserService {
 		return true;
 	}
 	
-	public static boolean checkCredentials(User user) {
+	public static User checkCredentials(User user) {
+		User returnUser = null;
 		try {
+			
 			ArrayList<User> readUsers = readExistsingUsers();
 			for(User u : readUsers) {
-				System.out.println(u);
+				//System.out.println(u);
 				if(u.getUserName().equals(user.getUserName()) && u.getPassword().equals(user.getPassword())) {
-					return true;
+					returnUser = u;
+					return returnUser;
 				}
 			}
-			return false;
+			return null;
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		
 		
-		return false;
+		return null;
 	}
 	
 	private static final String USERS_PATH = "." + File.separator + "MDP-Project" + File.separator + "Users" + File.separator + "users.json";
@@ -81,5 +84,4 @@ public class UserService {
 		br.close();
 		return users;
 	}
-	
 }

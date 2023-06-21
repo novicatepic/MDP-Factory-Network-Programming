@@ -97,6 +97,9 @@ public class LoginForm extends JFrame {
 					Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(user, MediaType.APPLICATION_JSON));
 					if(response.getStatus()==201) {
 						AfterLoginForm alf = new AfterLoginForm();
+						User user2 = response.readEntity(User.class);
+						System.out.println("USR2="+user2.getAddress());
+						alf.setUser(user2);
 						alf.setVisible(true);
 					} else {
 						throw new Exception("Non-existing account!");

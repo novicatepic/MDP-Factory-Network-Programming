@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.unibl.etf.mdp.buyer.model.Product;
+import org.unibl.etf.mdp.buyer.model.User;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -69,17 +70,10 @@ public class AfterLoginForm extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Client client = ClientBuilder.newClient();
 				WebTarget target = client.target(URI_BASE);
-				Response response = target.request(MediaType.APPLICATION_JSON).get();
-				
-				List<Product> products = response.readEntity(new GenericType<List<Product>>() {});
-				
-				/*for(Product product : products) {
-					System.out.println(product);
-				}*/
-				
+				Response response = target.request(MediaType.APPLICATION_JSON).get();				
+				List<Product> products = response.readEntity(new GenericType<List<Product>>() {});			
 				ProductsTableForm ptf = new ProductsTableForm();
-				ptf.populateData(products);
-				
+				ptf.populateData(products);				
 				response.close();
 				client.close();
 			}
@@ -91,7 +85,16 @@ public class AfterLoginForm extends JFrame {
 		JButton createOrderButton = new JButton("CREATE AN ORDER");
 		createOrderButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				Client client = ClientBuilder.newClient();
+				WebTarget target = client.target(URI_BASE);
+				Response response = target.request(MediaType.APPLICATION_JSON).get();				
+				List<Product> products = response.readEntity(new GenericType<List<Product>>() {});	
+				OrderForm of = new OrderForm();
+				of.setUser(user);
+				of.populateData(products);
+				//of.setVisible(true);
+				response.close();
+				client.close();
 			}
 		});
 		createOrderButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -99,4 +102,8 @@ public class AfterLoginForm extends JFrame {
 		contentPane.add(createOrderButton);
 	}
 
+	private User user;
+	public void setUser(User u) {
+		user = u;
+	}
 }
