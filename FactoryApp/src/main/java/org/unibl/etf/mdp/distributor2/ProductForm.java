@@ -112,6 +112,12 @@ public class ProductForm extends JFrame {
 						throw new Exception("Product already exists!");
 					}
 					
+					if(name != null) {
+						if(name.contains("/")) {
+							throw new Exception("Invalid / sign in product name!");
+						}
+					}
+					
 					Product newProduct = new Product(name, amount, price);
 					StartForm.distributor.addProduct(newProduct);
 					Gson gson = new Gson();

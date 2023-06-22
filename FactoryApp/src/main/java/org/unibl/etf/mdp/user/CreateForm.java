@@ -118,6 +118,11 @@ public class CreateForm extends JFrame {
 					if(ProductService.containsProduct(prName)) {
 						throw new Exception("Couldn't add product, already exists!");
 					}
+					if(prName != null) {
+						if(prName.contains("/")) {
+							throw new Exception("Invalid / sign in product name!");
+						}
+					}
 					ProductService.addProduct(product);
 					dispose();
 					//model.fireTableDataChanged();
