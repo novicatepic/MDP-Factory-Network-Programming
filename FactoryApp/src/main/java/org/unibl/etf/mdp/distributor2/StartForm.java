@@ -18,11 +18,6 @@ import java.awt.event.ActionEvent;
 public class StartForm extends JFrame {
 
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	
 	public static Distributor distributor = new Distributor();
 	
 	public static void main(String[] args) {
@@ -38,9 +33,7 @@ public class StartForm extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	
 	public StartForm() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);

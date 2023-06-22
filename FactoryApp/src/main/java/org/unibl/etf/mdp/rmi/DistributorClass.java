@@ -13,9 +13,15 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.unibl.etf.mdp.buyer.model.Product;
+import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
 import org.unibl.etf.mdp.distributor2.ProductForm;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import com.google.gson.Gson;
 
@@ -23,6 +29,19 @@ public class DistributorClass implements DistributorInterface {
 	public static final String PATH = "resources";
 	public DistributorClass() throws RemoteException {}
 	private String fileName;
+	
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(DistributorClass.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(DistributorClass.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public List<Product> getDistributorProducts(String name) throws RemoteException {
 		ArrayList<Product> products = new ArrayList<>();
@@ -45,6 +64,7 @@ public class DistributorClass implements DistributorInterface {
 			}		
 			br.close();
 		} catch(Exception ex) {
+			Logger.getLogger(DistributorClass.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 			ex.printStackTrace();
 			return null;
 		}
@@ -79,6 +99,7 @@ public class DistributorClass implements DistributorInterface {
 			Registry registry = LocateRegistry.createRegistry(1099);
 			registry.rebind("Distributor", stub);
 		} catch(Exception e) {
+			Logger.getLogger(DistributorClass.class.getName()).log(Level.SEVERE, e.fillInStackTrace().toString());
 			e.printStackTrace();
 		}
 	}

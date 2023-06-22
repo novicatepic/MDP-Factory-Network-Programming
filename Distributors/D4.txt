@@ -1,0 +1,2 @@
+{"name":"D4Proizvod1","amount":6,"price":25.99}
+{"name":"D4NN","amount":11,"price":12.0}

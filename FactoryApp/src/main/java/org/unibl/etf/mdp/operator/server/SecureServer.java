@@ -8,19 +8,14 @@ import javax.net.ssl.SSLSocket;
 
 import org.unibl.etf.mdp.properties.PropertiesService;
 
-public class SecureServer {
-
-	{
-		PORT=Integer.valueOf(PropertiesService.getElement("PORT_8443"));
-		KEY_STORE_PASSWORD=PropertiesService.getElement("KEYSTORE_PASSWORD");
-	}
-	
+public class SecureServer {	
 	private static int PORT;
 	private static final String KEY_STORE_PATH = "./keystore.jks";
 	private static String KEY_STORE_PASSWORD;
 	
 	public static void main(String[] args) throws IOException {		
-
+		PORT=Integer.valueOf(PropertiesService.getElement("PORT_8443"));
+		KEY_STORE_PASSWORD=PropertiesService.getElement("KEYSTORE_PASSWORD");
 		System.setProperty("javax.net.ssl.keyStore", KEY_STORE_PATH);
 		System.setProperty("javax.net.ssl.keyStorePassword", KEY_STORE_PASSWORD);
 

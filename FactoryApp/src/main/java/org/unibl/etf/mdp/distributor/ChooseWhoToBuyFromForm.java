@@ -5,8 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import org.unibl.etf.mdp.model.User;
+import org.unibl.etf.mdp.properties.PropertiesService;
 import org.unibl.etf.mdp.rmi.DistributorInterface;
 
 import com.google.gson.Gson;
@@ -20,9 +20,14 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 
@@ -30,22 +35,17 @@ public class ChooseWhoToBuyFromForm extends JFrame {
 
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChooseWhoToBuyFromForm frame = new ChooseWhoToBuyFromForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(ChooseWhoToBuyFromForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(ChooseWhoToBuyFromForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
 	}
-
 
 	private JComboBox disBox = new JComboBox();
 	public static final String PATH = "resources";
@@ -102,6 +102,7 @@ public class ChooseWhoToBuyFromForm extends JFrame {
 						//lif.setVisible(true);
 					}
 				} catch(Exception ex) {
+					Logger.getLogger(ChooseWhoToBuyFromForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}			
 			}

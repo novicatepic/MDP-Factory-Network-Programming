@@ -12,6 +12,8 @@ import org.unibl.etf.mdp.buyer.model.Order;
 import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.buyer.model.User;
 import org.unibl.etf.mdp.mq.ConnectionFactoryUtil;
+import org.unibl.etf.mdp.properties.PropertiesService;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
@@ -19,6 +21,11 @@ import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
@@ -28,6 +35,7 @@ import java.beans.XMLEncoder;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.awt.event.ActionEvent;
@@ -36,25 +44,23 @@ public class CreateOrderForm extends JFrame {
 
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CreateOrderForm frame = new CreateOrderForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	{
+		QUEUE=PropertiesService.getElement("QUEUE_NAME");
 	}
-
-	/**
-	 * Create the frame.
-	 */
+	
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(CreateOrderForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(CreateOrderForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
+	}
+	
+	private static String QUEUE;
 	private JPanel panel;
 	public CreateOrderForm() {
 		
@@ -90,13 +96,13 @@ public class CreateOrderForm extends JFrame {
 					Connection connection = ConnectionFactoryUtil.createConnection();
 					Channel channel = connection.createChannel();
 					System.out.println(xmlString);
-					channel.queueDeclare("order", false, false, false, null);
-					channel.basicPublish("", "order", null, xmlString.getBytes());
+					channel.queueDeclare(QUEUE, false, false, false, null);
+					channel.basicPublish("", QUEUE, null, xmlString.getBytes());
 					channel.close();
 					connection.close();
 					
 				} catch(Exception ex) {
-					System.out.println(ex.getMessage());
+					Logger.getLogger(CreateOrderForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}
 			}
@@ -121,7 +127,6 @@ public class CreateOrderForm extends JFrame {
 					panel.add(new JLabel(products.get(i).getName()));
 				} else {
 					for(int k=1; k<=products.get(i).getAmount(); k++) {
-						System.out.println("K="+k);
 						comboBoxes[i].addItem(k);
 					}
 					panel.add(comboBoxes[i]);
@@ -133,6 +138,6 @@ public class CreateOrderForm extends JFrame {
 	private User user;
 	public void setUser(User u) {
 		user = u;
-		System.out.println("CREATE ORDER FORM USER="+user.getAddress());
+		//System.out.println("CREATE ORDER FORM USER="+user.getAddress());
 	}
 }

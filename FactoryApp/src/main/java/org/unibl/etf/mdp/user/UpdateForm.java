@@ -22,6 +22,11 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 
 public class UpdateForm extends JFrame {
@@ -29,29 +34,21 @@ public class UpdateForm extends JFrame {
 	private JPanel contentPane;
 	private JTextField amountField;
 	private JTextField valueField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CreateForm frame = new CreateForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	
 	{
 		URI_BASE = PropertiesService.getElement("REGISTER_REST");
+	}
+	
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(UpdateForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(UpdateForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
 	}
 	
 	public static String URI_BASE;
@@ -100,6 +97,7 @@ public class UpdateForm extends JFrame {
 					Product product2 = new Product(product.getName(), amount, value);
 					ProductService.updateProduct(product2);
 				} catch(Exception ex) {
+					Logger.getLogger(UpdateForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}				
 			}

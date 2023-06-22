@@ -1,10 +1,10 @@
 package org.unibl.etf.mdp.distributor;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import org.unibl.etf.mdp.properties.PropertiesService;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
@@ -12,34 +12,31 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 
 public class ChooseDistributorForm extends JFrame {
 
-	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChooseDistributorForm frame = new ChooseDistributorForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
+	private JPanel contentPane;	
 	private JComboBox disBox = new JComboBox();
+	
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(ChooseDistributorForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(ChooseDistributorForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
+	}
 	
 	public ChooseDistributorForm() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -73,6 +70,7 @@ public class ChooseDistributorForm extends JFrame {
 					File f = new File(StartDistributorForm.FACTORY_DISTRIBUTORS_PATH+str);
 					f.createNewFile();
 				} catch(Exception ex) {
+					Logger.getLogger(ChooseDistributorForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}			
 			}

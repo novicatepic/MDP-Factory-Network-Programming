@@ -4,6 +4,10 @@ import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import org.unibl.etf.mdp.model.User;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import com.google.gson.Gson;
 
@@ -23,6 +28,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.awt.event.ActionEvent;
@@ -30,27 +36,20 @@ import java.awt.event.ActionEvent;
 public class RequestsForm extends JFrame {
 
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RequestsForm frame = new RequestsForm();
-					//frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	JFrame frame = new JFrame("Requests table");
+	
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(RequestsForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(RequestsForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
+	}
+	
 	public RequestsForm() {
         JButton rejectButt = new JButton("REJECT");
         rejectButt.addActionListener(new ActionListener() {
@@ -108,6 +107,7 @@ public class RequestsForm extends JFrame {
             			}
             		}
         		} catch(Exception ex) {
+        			Logger.getLogger(RequestsForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
         			ex.printStackTrace();
         		}       		
         	}

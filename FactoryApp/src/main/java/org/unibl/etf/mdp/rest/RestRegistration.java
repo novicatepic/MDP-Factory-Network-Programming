@@ -16,21 +16,6 @@ import org.unibl.etf.mdp.model.User;
 @Path("/register")
 public class RestRegistration {
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAll() {
-		return null;
-		/*try {
-			PrintWriter pw = new PrintWriter(new FileWriter("./a.txt"));
-			pw.println("cc");
-			pw.close();
-			System.out.println("Written");
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return Response.status(200).entity(ProizvodServis.getProizvodi()).build();*/
-	}
-	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

@@ -6,9 +6,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
 import org.unibl.etf.mdp.model.Operator;
 import org.unibl.etf.mdp.model.User;
 import org.unibl.etf.mdp.mq.ConnectionFactoryUtil;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.AMQP;
@@ -35,6 +37,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
@@ -42,24 +48,20 @@ public class OrderTakeAndGo extends JFrame {
 
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					OrderTakeAndGo frame = new OrderTakeAndGo();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(OrderTakeAndGo.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(OrderTakeAndGo.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
 	}
-	public OrderTakeAndGo() {
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
+	public OrderTakeAndGo() {	
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setBounds(100, 100, 452, 197);
 		contentPane = new JPanel();
@@ -84,6 +86,7 @@ public class OrderTakeAndGo extends JFrame {
 					pof.setXML();
 					pof.setVisible(true);
 				} catch(Exception ex) {
+					Logger.getLogger(OrderTakeAndGo.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}
 				

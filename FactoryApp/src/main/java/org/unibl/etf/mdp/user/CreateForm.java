@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.unibl.etf.mdp.buyer.model.Product;
+import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
 import org.unibl.etf.mdp.product.ProductService;
 import org.unibl.etf.mdp.properties.PropertiesService;
 
@@ -22,6 +23,11 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 
 public class CreateForm extends JFrame {
@@ -31,20 +37,16 @@ public class CreateForm extends JFrame {
 	private JTextField amountField;
 	private JTextField valueField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CreateForm frame = new CreateForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(CreateForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(CreateForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
 	}
 
 	{
@@ -111,6 +113,7 @@ public class CreateForm extends JFrame {
 					}
 					ProductService.addProduct(product);
 				} catch(Exception ex) {
+					Logger.getLogger(CreateForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}				
 			}

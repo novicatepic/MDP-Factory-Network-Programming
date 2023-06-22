@@ -1,7 +1,6 @@
 package org.unibl.etf.mdp.buyer;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -11,16 +10,19 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.unibl.etf.mdp.buyer.model.User;
 import org.unibl.etf.mdp.properties.PropertiesService;
-
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 
 public class LoginForm extends JFrame {
@@ -29,25 +31,17 @@ public class LoginForm extends JFrame {
 	private JTextField userNameField;
 	private JTextField passwordField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginForm frame = new LoginForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(LoginForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(LoginForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
 	}
-
-	/**
-	 * Create the frame.
-	 */
 	
 	{
 		URI_BASE=PropertiesService.getElement("LOGIN_REST");
@@ -112,6 +106,7 @@ public class LoginForm extends JFrame {
 					response.close();
 					client.close();
 				} catch(Exception ex) {
+					Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}				
 			}

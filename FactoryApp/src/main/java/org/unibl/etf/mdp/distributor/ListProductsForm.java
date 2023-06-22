@@ -3,6 +3,10 @@ import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.product.ProductService;
+import org.unibl.etf.mdp.properties.PropertiesService;
 import org.unibl.etf.mdp.rmi.DistributorInterface;
 
 import com.google.gson.Gson;
@@ -25,6 +30,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.rmi.registry.LocateRegistry;
@@ -38,25 +44,17 @@ public class ListProductsForm extends JFrame {
 
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ListProductsForm frame = new ListProductsForm();
-					//frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(ListProductsForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(ListProductsForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
 	}
-
-	/**
-	 * Create the frame.
-	 */
 	
 	private String file;
 	public void setFile(String f) {
@@ -78,25 +76,37 @@ public class ListProductsForm extends JFrame {
             				if(products.get(i).getAmount() < enteredAmount) {
             					throw new Exception("Amount must be lower than real amount!");
             				}
-            				products.get(i).setAmount(products.get(i).getAmount()-enteredAmount);
-            				ProductService.addProduct(products.get(i));
+            				//System.out.println(products.get(i).getName());
+            				boolean contains = ProductService.products.contains(products.get(i).getName());
+            				if(contains) {
+            					System.out.println("CONTAINS");
+            					Product temp = null;
+            					ArrayList<Product> prods = ProductService.readProducts();
+            					for(Product p : prods) {
+            						if(p.getName().equals(products.get(i).getName())) {
+            							temp = p;
+            						}
+            					}
+            					if(temp != null) {
+            						temp.setAmount(temp.getAmount()+enteredAmount);
+            						System.out.println(temp.getName());
+            						System.out.println(temp.getAmount());
+            						ProductService.updateProduct(temp);
+            					}
+            				} else {
+            					System.out.println("DOESN'T CONTAIN");
+            					Product temp = new Product(products.get(i).getName(), enteredAmount, products.get(i).getPrice());
+            					ProductService.addProduct(temp);
+            				}   
+            				products.get(i).setAmount(products.get(i).getAmount()-enteredAmount); 
             			}
             		}
             		String name="Distributor";
 					Registry registry = LocateRegistry.getRegistry(1099);
 					DistributorInterface dif = (DistributorInterface) registry.lookup(name);
-					//System.out.println(file);
-					//String[] parse = file.split("\\");
 					dif.writeUpdatedProducts(products);
-            		/*File f = new File(file);
-            		f.delete();
-            		Gson gson = new Gson();
-            		PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-            		for(Product p : products) {
-            			pw.println(gson.toJson(p));
-            		}
-            		pw.close();*/
         		} catch(Exception ex) {
+        			Logger.getLogger(ChooseWhoToBuyFromForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
         			ex.printStackTrace();
         		}       		
         	}

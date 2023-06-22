@@ -21,6 +21,11 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 
 public class RegisterUserForm extends JFrame {
@@ -33,25 +38,17 @@ public class RegisterUserForm extends JFrame {
 	private JTextField passwordField;
 	private JTextField passwordAgainField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegisterUserForm frame = new RegisterUserForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(RegisterUserForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(RegisterUserForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
 	}
-
-	/**
-	 * Create the frame.
-	 */
 	
 	{
 		URI_BASE=PropertiesService.getElement("REGISTER_REST");
@@ -154,6 +151,7 @@ public class RegisterUserForm extends JFrame {
 					response.close();
 					client.close();
 				} catch(Exception ex) {
+					Logger.getLogger(RegisterUserForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}				
 			}

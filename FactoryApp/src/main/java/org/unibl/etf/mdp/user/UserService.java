@@ -7,10 +7,16 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.unibl.etf.mdp.model.User;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
@@ -19,13 +25,7 @@ import com.google.gson.Gson;
 public class UserService {
 
 	private static ArrayList<User> users = new ArrayList<>();
-	
-
 	public static final String PATH = "." + File.separator + "MDP-Project" + File.separator + "RegistrationRequests" + File.separator;
-	
-	static {
-		users.add(new User("a", "a", "a", "a", "a"));
-	}
 	
 	public static boolean createUser(User u) {
 		String fileName = u.getUserName();

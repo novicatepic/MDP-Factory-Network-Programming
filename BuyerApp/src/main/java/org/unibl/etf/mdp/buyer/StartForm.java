@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import org.unibl.etf.mdp.properties.PropertiesService;
-
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -17,6 +16,11 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 
 
@@ -26,6 +30,18 @@ public class StartForm extends JFrame {
 	private static String HOST;
 	private JPanel contentPane;
 	private static JLabel messageLabel = new JLabel("");
+	
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(StartForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(StartForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
+	}
 	
 	{
 		MULTICAST_PORT=Integer.valueOf(PropertiesService.getElement("MULTICAST_PORT"));
@@ -57,11 +73,13 @@ public class StartForm extends JFrame {
 									messageLabel.setText(received);	
 								}									
 							} catch(IOException ex) {
+								Logger.getLogger(StartForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 								ex.printStackTrace();
 							}										
 						}
 					}).start();
 				} catch (Exception e) {
+					Logger.getLogger(StartForm.class.getName()).log(Level.SEVERE, e.fillInStackTrace().toString());
 					e.printStackTrace();
 				}
 			}

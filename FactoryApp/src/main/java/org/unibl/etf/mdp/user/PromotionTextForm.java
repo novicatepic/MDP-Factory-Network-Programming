@@ -20,9 +20,14 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 
 public class PromotionTextForm extends JFrame {
@@ -36,21 +41,17 @@ public class PromotionTextForm extends JFrame {
 	private static String MULTICAST_HOST;
 	private JPanel contentPane;
 	private JTextField messageField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PromotionTextForm frame = new PromotionTextForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(PromotionTextForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(PromotionTextForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
 	}
 	
 	public PromotionTextForm() {
@@ -92,6 +93,7 @@ public class PromotionTextForm extends JFrame {
 					socket.send(packet);
 					socket.close();
 				} catch(Exception ex) {
+					Logger.getLogger(PromotionTextForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}				
 			}

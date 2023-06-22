@@ -51,10 +51,23 @@ public class Order {
 		this.amounts = amounts;
 	}
 
+	public String printProductsAndAmounts() {
+		String result="";
+		result+="ORDER: \n";
+		//System.out.println("ORDER: ");
+		for(int i=0; i<products.size(); i++) {
+			result+="Name: " + products.get(i).getName() + " Amount: " + amounts.get(i) + "\n";
+			/*System.out.print("Name: " + products.get(i).getName() + " Amount: " + amounts.get(i));
+			System.out.println();*/
+		}
+		return result;
+	}
+	
 	@Override
 	public String toString() {
-		return "Order [userName=" + userName + ", address=" + address + ", products=" + products.toArray() + ", amounts="
-				+ amounts.toArray() + "]";
+		/*return "Order [userName=" + userName + ", address=" + address + ", products=" + products.toArray() + ", amounts="
+				+ amounts.toArray() + "]";*/
+		return printProductsAndAmounts();
 	}
 	
 	

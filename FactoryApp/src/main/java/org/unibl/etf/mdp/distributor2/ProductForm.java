@@ -6,8 +6,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import org.unibl.etf.mdp.buyer.model.Product;
+import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
 import org.unibl.etf.mdp.model.Distributor;
 import org.unibl.etf.mdp.product.ProductService;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import com.google.gson.Gson;
 import javax.swing.JTextField;
@@ -18,7 +20,12 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 
 public class ProductForm extends JFrame {
@@ -27,28 +34,19 @@ public class ProductForm extends JFrame {
 	private JTextField nameField;
 	private JTextField amountField;
 	private JTextField priceField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ProductForm frame = new ProductForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	
 	public static final String PATH=".."+File.separator+"Distributors"+File.separator;
+	
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(ProductForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(ProductForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
+	}
 	
 	public ProductForm() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -117,13 +115,9 @@ public class ProductForm extends JFrame {
 					Gson gson = new Gson();
 					PrintWriter pw = new PrintWriter(new FileWriter(new File(PATH+StartForm.distributor.getName()+".txt"), true), true);
 					pw.println(gson.toJson(newProduct));
-					pw.close();
-					
-					/*for(Product p : StartForm.distributor.getProducts()) {
-						System.out.println(p);
-					}*/
-					
+					pw.close();				
 				} catch(Exception ex) {
+					Logger.getLogger(ProductForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}				
 			}

@@ -1,2 +1,2 @@
-Logger
-Posloziti GUI prema specifikaciji
+Refresovanje prozora (ako se stigne)
+Istestirati sve jos jednom

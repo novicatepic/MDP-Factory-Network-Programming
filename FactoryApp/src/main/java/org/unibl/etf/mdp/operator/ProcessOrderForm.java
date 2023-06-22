@@ -17,6 +17,10 @@ import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -30,6 +34,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import org.unibl.etf.mdp.buyer.model.Order;
 import org.unibl.etf.mdp.buyer.model.Product;
+import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
 import org.unibl.etf.mdp.mq.ConnectionFactoryUtil;
 import org.unibl.etf.mdp.product.ProductService;
 import org.unibl.etf.mdp.properties.PropertiesService;
@@ -68,29 +73,29 @@ public class ProcessOrderForm extends JFrame {
 		HOST=PropertiesService.getElement("LOCAL_HOST");
 		PORT=Integer.valueOf(PropertiesService.getElement("PORT_8443"));
 		KEY_STORE_PASSWORD=PropertiesService.getElement("KEYSTORE_PASSWORD");
+		GEN_INFO=PropertiesService.getElement("PROTOCOL_GEN_INFO_MESSAGE");
+		QUEUE=PropertiesService.getElement("QUEUE_NAME");
 	}
 	
+	private static String QUEUE;
+	private static String GEN_INFO;
 	private static final String KEY_STORE_PATH = "."+File.separator+"keystore.jks";
 	private static String KEY_STORE_PASSWORD;
 	private static String HOST;
 	private static int PORT;
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ProcessOrderForm frame = new ProcessOrderForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(ProcessOrderForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(ProcessOrderForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
 	}
-
-	/**
-	 * Create the frame.
-	 */
+	
 	public ProcessOrderForm() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1006, 764);
@@ -110,8 +115,8 @@ public class ProcessOrderForm extends JFrame {
 					SSLSocketFactory sf = (SSLSocketFactory)SSLSocketFactory.getDefault();
 					SSLSocket s = (SSLSocket) sf.createSocket(HOST, PORT);
 					PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream())), true);
-					out.println("GEN_INFO");
-					String mesToSend = "PRIHVACENA NARUDZBA " + order + " OD OPERATORA " + operator;
+					out.println(GEN_INFO);
+					String mesToSend = "ACCEPTED ORDER " + order + " FROM OPERATOR " + operator;
 					out.println(mesToSend);
 					ArrayList<Product> prodService = ProductService.readProducts();
 					for(int i=0; i<prodService.size(); i++) {
@@ -127,7 +132,7 @@ public class ProcessOrderForm extends JFrame {
 						ProductService.updateProduct(order.getProducts().get(i));
 					}
 					
-					boolean status = sendMail(order.getAddress(), "Obavjestenje o narudzbi", mesToSend);
+					boolean status = sendMail(order.getAddress(), "Order notification success", mesToSend);
 					out.close();
 					s.close();
 				} catch(Exception ex) {
@@ -148,13 +153,14 @@ public class ProcessOrderForm extends JFrame {
 					SSLSocketFactory sf = (SSLSocketFactory)SSLSocketFactory.getDefault();
 					SSLSocket s = (SSLSocket) sf.createSocket(HOST, PORT);
 					PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream())), true);
-					String mesToSend = "ODBIJENA NARUDZBA " + order + " OD OPERATORA " + operator;
-					out.println("GEN_INFO");
-					out.println("ODBIJENA NARUDZBA " + order + " OD OPERATORA " + operator);
-					boolean status = sendMail(order.getAddress(), "Obavjestenje o narudzbi", mesToSend);
+					String mesToSend = "REJECTED ORDER " + order + " FROM OPERATOR " + operator;
+					out.println(GEN_INFO);
+					out.println("REJECTED ORDER " + order + " FROM OPERATOR " + operator);
+					boolean status = sendMail(order.getAddress(), "Order notification failure", mesToSend);
 					out.close();
 					s.close();
 				} catch(Exception ex) {
+					Logger.getLogger(ProcessOrderForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}				
 			}
@@ -223,17 +229,11 @@ public class ProcessOrderForm extends JFrame {
 	      msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
 	      msg.addHeader("format", "flowed");
 	      msg.addHeader("Content-Transfer-Encoding", "8bit");
-
 	      msg.setFrom(new InternetAddress("no_reply@example.com", "NoReply-JD"));
-
 	      msg.setReplyTo(InternetAddress.parse("no_reply@example.com", false));
-
 	      msg.setSubject(subject, "UTF-8");
-
 	      msg.setText(body, "UTF-8");
-
 	      msg.setSentDate(new Date());
-
 	      msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
 	      System.out.println("Message is ready");
     	  Transport.send(msg);  
@@ -241,6 +241,7 @@ public class ProcessOrderForm extends JFrame {
 	      System.out.println("EMail Sent Successfully!!");
 	    }
 	    catch (Exception e) {
+	    	Logger.getLogger(ProcessOrderForm.class.getName()).log(Level.SEVERE, e.fillInStackTrace().toString());
 	      e.printStackTrace();
 	    }
 	}
@@ -248,7 +249,7 @@ public class ProcessOrderForm extends JFrame {
 	public void processOrder() throws Exception {
 		Connection connection = ConnectionFactoryUtil.createConnection();
 		Channel channel = connection.createChannel();
-		channel.queueDeclare("order", false, false, false, null);
+		channel.queueDeclare(QUEUE, false, false, false, null);
 		//channel.basicQos(1);	
 		
 		//String message = "";
@@ -269,7 +270,7 @@ public class ProcessOrderForm extends JFrame {
 		
 		//channel.basicConsume("order", false, consumer);
 		
-		GetResponse response = channel.basicGet("order", true);
+		GetResponse response = channel.basicGet(QUEUE, true);
 		if (response != null) {
 		    String message = new String(response.getBody(), "UTF-8");
 		    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("./message.xml", true)), true);
@@ -336,11 +337,9 @@ public class ProcessOrderForm extends JFrame {
 			
 			File f = new File("./message.xml");
 			f.delete();
-			System.out.println("END");
-			xml="";
-			
-			
+			xml="";			
 		} catch(Exception ex) {
+			Logger.getLogger(ProcessOrderForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 			ex.printStackTrace();
 		}		
 	}
@@ -351,7 +350,7 @@ public class ProcessOrderForm extends JFrame {
 		serverprop.load(new FileInputStream(new File("./server.properties")));
 		String mailProvider = serverprop.getProperty("mail_provider");
 
-		System.out.println("Koristi se " + mailProvider);
+		System.out.println("We use " + mailProvider);
 		
 		Properties mailProp = new Properties();
 		mailProp.load(new FileInputStream(new File("./mail" + File.separator + mailProvider + ".properties")));
@@ -364,8 +363,6 @@ public class ProcessOrderForm extends JFrame {
 	private boolean sendMail(String to, String title, String body) throws FileNotFoundException, IOException {
 
 		Properties props = loadMailConfig();
-		System.out.println("Username: " + username);
-		System.out.println("Password: " + password);
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
 				return new javax.mail.PasswordAuthentication(username, password);
@@ -381,49 +378,9 @@ public class ProcessOrderForm extends JFrame {
 			Transport.send(message);
 			return true;
 		} catch (MessagingException e) {
+			Logger.getLogger(ProcessOrderForm.class.getName()).log(Level.SEVERE, e.fillInStackTrace().toString());
 			e.printStackTrace();
 			return false;
 		}
 	}
-	
-	/*private static boolean mailFunc() {
-		String  d_email = "novicamdp@mail.com",
-	            d_uname = "Novica",
-	            d_password = "novicamdp",
-	            d_host = "smtp.gmail.com",
-	            d_port  = "465",
-	            m_to = "tepicnovic@gmail.com",
-	            m_subject = "Indoors Readable File: ",
-	            m_text = "This message is from Indoor Positioning App. Required file(s) are attached.";
-	    Properties props = new Properties();
-	    props.put("mail.smtp.user", d_email);
-	    props.put("mail.smtp.host", d_host);
-	    props.put("mail.smtp.port", d_port);
-	    props.put("mail.smtp.starttls.enable","true");
-	    props.put("mail.smtp.debug", "true");
-	    props.put("mail.smtp.auth", "true");
-	    props.put("mail.smtp.socketFactory.port", d_port);
-	    props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-	    props.put("mail.smtp.socketFactory.fallback", "false");
-
-	    //SMTPAuthenticator auth = new SMTPAuthenticator();
-	    Session session = Session.getInstance(props, auth);
-	    session.setDebug(true);
-
-	    MimeMessage msg = new MimeMessage(session);
-	    try {
-	        msg.setSubject(m_subject);
-	        msg.setFrom(new InternetAddress(d_email));
-	        msg.addRecipient(Message.RecipientType.TO, new InternetAddress(m_to));
-
-	Transport transport = session.getTransport("smtps");
-	            transport.connect(d_host, Integer.valueOf(d_port), d_uname, d_password);
-	            transport.sendMessage(msg, msg.getAllRecipients());
-	            transport.close();
-
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            return false;
-	        } 
-	}*/
 }

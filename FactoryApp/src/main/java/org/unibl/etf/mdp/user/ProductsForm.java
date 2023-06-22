@@ -28,27 +28,8 @@ import java.awt.event.ActionEvent;
 public class ProductsForm extends JFrame {
 
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ProductsForm frame = new ProductsForm();
-					//frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	JFrame frame = new JFrame("Requests table");
+	
 	public ProductsForm() {
         JButton createProduct = new JButton("CREATE");
         createProduct.addActionListener(new ActionListener() {

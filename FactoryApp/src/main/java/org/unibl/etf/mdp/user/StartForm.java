@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import org.unibl.etf.mdp.distributor.StartDistributorForm;
 import org.unibl.etf.mdp.model.User;
 import org.unibl.etf.mdp.product.ProductService;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import com.google.gson.Gson;
 
@@ -22,8 +23,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 
 public class StartForm extends JFrame {
@@ -32,9 +38,18 @@ public class StartForm extends JFrame {
 	public static final String USERS_PATH = ".." + File.separator + "Users" + File.separator + "users.json";
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
+	static {
+		try {
+			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
+			Handler fileHandler = new FileHandler(LOGGER_PATH, true);
+			Logger.getLogger(StartForm.class.getName()).setUseParentHandlers(false);
+			Logger.getLogger(StartForm.class.getName()).addHandler(fileHandler);
+		} catch(IOException e) {
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, e.fillInStackTrace().toString());
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -72,6 +87,7 @@ public class StartForm extends JFrame {
 					UsersForm uf = new UsersForm();
 					uf.populateData(existingUsers);
 				} catch(Exception ex) {
+					Logger.getLogger(StartForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}				
 			}
@@ -112,6 +128,7 @@ public class StartForm extends JFrame {
 					rf.populateData(requestUsers);
 					//rf.setVisible(true);
 				} catch(Exception ex) {
+					Logger.getLogger(StartForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}
 			}

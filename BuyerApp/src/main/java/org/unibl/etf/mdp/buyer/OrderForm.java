@@ -3,6 +3,10 @@ import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.buyer.model.User;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import com.google.gson.Gson;
 
@@ -24,6 +29,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.awt.event.ActionEvent;
@@ -33,26 +39,7 @@ import javax.swing.SwingConstants;
 public class OrderForm extends JFrame {
 
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					OrderForm frame = new OrderForm();
-					//frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
+	
 	JFrame frame = new JFrame("Requests table");
 	public OrderForm() {
         frame.getContentPane().setLayout(null);

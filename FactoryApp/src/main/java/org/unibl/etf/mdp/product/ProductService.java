@@ -5,9 +5,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.unibl.etf.mdp.buyer.model.Product;
+import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
 import org.unibl.etf.mdp.model.User;
+import org.unibl.etf.mdp.properties.PropertiesService;
 
 import com.google.gson.Gson;
 
@@ -18,9 +24,9 @@ public class ProductService {
 
 	public static ArrayList<Product> products = new ArrayList<>();
 	public static String instanceName = "Product";
-	
 	private static JedisPool pool = new JedisPool("localhost");
 	private static Jedis jedis = pool.getResource();
+	
 	public static void writeProducts() {
 		try {
 			jedis.set(instanceName, "OK");
