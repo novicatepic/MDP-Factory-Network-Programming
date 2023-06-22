@@ -1,7 +1,6 @@
 package org.unibl.etf.mdp.user;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -11,11 +10,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.product.ProductService;
 import org.unibl.etf.mdp.properties.PropertiesService;
-
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -92,10 +89,12 @@ public class UpdateForm extends JFrame {
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//Set new amount or value to the product and call the corresponding method 
 					Integer amount = Integer.valueOf(amountField.getText());
 					Double value = Double.valueOf(valueField.getText());
 					Product product2 = new Product(product.getName(), amount, value);
 					ProductService.updateProduct(product2);
+					dispose();
 				} catch(Exception ex) {
 					Logger.getLogger(UpdateForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();

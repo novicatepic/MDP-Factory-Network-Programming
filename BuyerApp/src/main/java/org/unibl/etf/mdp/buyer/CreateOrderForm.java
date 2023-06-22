@@ -45,9 +45,11 @@ public class CreateOrderForm extends JFrame {
 	private JPanel contentPane;
 
 	{
+		//Read queue name
 		QUEUE=PropertiesService.getElement("QUEUE_NAME");
 	}
 	
+	//Set up logger for every class separately
 	static {
 		try {
 			String LOGGER_PATH = PropertiesService.getElement("LOGGER_PATH");
@@ -82,6 +84,7 @@ public class CreateOrderForm extends JFrame {
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//Encode Order into XML format with XMLEncoder and write it to a file
 					XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream("test.xml")));
 					ArrayList<Integer> amounts = new ArrayList<>();
 					for(int i=0; i<products.size(); i++) {
@@ -90,9 +93,11 @@ public class CreateOrderForm extends JFrame {
 					Order order = new Order(user.getUserName(), user.getAddress(), products, amounts);
 					encoder.writeObject(order);
 					encoder.close();
+					//Read XML string from newly created file and delete it (just a temporary file)
 					String xmlString = new String(Files.readAllBytes(Paths.get("test.xml")));
 					File f = new File("test.xml");
 					f.delete();
+					//Create connection to and write XML string to the queue
 					Connection connection = ConnectionFactoryUtil.createConnection();
 					Channel channel = connection.createChannel();
 					System.out.println(xmlString);
@@ -114,6 +119,7 @@ public class CreateOrderForm extends JFrame {
 	
 	List<Product> products = new ArrayList<>();
 	JComboBox[] comboBoxes;
+	//Populate table with Products data
 	public void populateData(List<Product> prs) {
 		products = prs;
 		panel.setLayout(new GridLayout(products.size(), 2));

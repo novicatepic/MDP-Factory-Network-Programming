@@ -1,11 +1,9 @@
 package org.unibl.etf.mdp.buyer;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import org.unibl.etf.mdp.properties.PropertiesService;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -22,7 +20,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
-
 
 public class StartForm extends JFrame {
 
@@ -44,9 +41,9 @@ public class StartForm extends JFrame {
 	}
 	
 	{
+		//READ MULTICAST PORT AND MULTICAST HOST
 		MULTICAST_PORT=Integer.valueOf(PropertiesService.getElement("MULTICAST_PORT"));
 		HOST=PropertiesService.getElement("HOST");
-		//System.out.println(HOST + " " + MULTICAST_PORT);
 	}
 	
 	public static void main(String[] args) {
@@ -65,6 +62,8 @@ public class StartForm extends JFrame {
 								byte[] buffer = new byte[256];
 								InetAddress address = InetAddress.getByName(HOST);
 								socket.joinGroup(address);
+								//New thread wil start the loop and whenever there is a Multicast message
+								//It will be shown on the client side, as per specification requests
 								while(true) {
 									DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 									socket.receive(packet);

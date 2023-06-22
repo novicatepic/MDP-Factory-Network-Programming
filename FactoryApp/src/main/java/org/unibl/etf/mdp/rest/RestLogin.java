@@ -16,15 +16,21 @@ import org.unibl.etf.mdp.model.User;
 @Path("/login")
 public class RestLogin {
 
+	//Return 201 if there are user credentials, else 404
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addProizvod(User u) {
 		User usr = org.unibl.etf.mdp.user.UserService.checkCredentials(u);
 		if(usr != null && !usr.isSuspended()) {
-			return Response.status(201).entity(usr).build();
+			//User found, 200 status code as a response
+			return Response.status(200).entity(usr).build();
+		} else if(usr.isSuspended()){
+			//Fobidden (no access) if the user is suspended at the given moment
+			return Response.status(403).build();
 		} else {
-			return Response.status(500).build();
+			//User not found
+			return Response.status(404).build();
 		}
 	}
 }

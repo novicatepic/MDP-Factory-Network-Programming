@@ -18,6 +18,7 @@ import org.unibl.etf.mdp.product.ProductService;
 @Path("/products")
 public class RestProduct {
 
+	//Return all of the products
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll() {

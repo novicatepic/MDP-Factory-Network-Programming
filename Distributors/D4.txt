@@ -1,2 +1,11 @@
-{"name":"D4Proizvod1","amount":6,"price":25.99}
-{"name":"D4NN","amount":11,"price":12.0}
+{"name":"ProductNew","amount":1097,"price":6.0}
+{"name":"Product3","amount":94,"price":20.0}
+{"name":"pr2","amount":75,"price":12.5}
+{"name":"Najnoviji proizvod","amount":14,"price":25.99}
+{"name":"pr4","amount":10,"price":32.0}
+{"name":"PrviProizvodD3","amount":40,"price":20.5}
+{"name":"D4Proizvod1","amount":9,"price":25.99}
+{"name":"ProductD3...","amount":3,"price":25.24}
+{"name":"PRD4Kosilica","amount":2,"price":24.5}
+{"name":"Noviprrr","amount":3,"price":11.2}
+{"name":"D4NPR","amount":5,"price":5.0}

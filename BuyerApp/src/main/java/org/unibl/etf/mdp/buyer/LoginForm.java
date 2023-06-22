@@ -88,23 +88,27 @@ public class LoginForm extends JFrame {
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//Make post request to the Factory side and get response, if credentials exist or they don't
 					String userName = userNameField.getText();
 					String password = passwordField.getText();
 					User user = new User(userName, password);
 					Client client = ClientBuilder.newClient();
 					WebTarget target = client.target(URI_BASE);
 					Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(user, MediaType.APPLICATION_JSON));
-					if(response.getStatus()==201) {
+					if(response.getStatus()==200) {
 						AfterLoginForm alf = new AfterLoginForm();
 						User user2 = response.readEntity(User.class);
 						System.out.println("USR2="+user2.getAddress());
 						alf.setUser(user2);
 						alf.setVisible(true);
+					} else if(response.getStatus() == 403) {
+						throw new Exception("Suspended!");
 					} else {
-						throw new Exception("Non-existing account or suspended!");
+						throw new Exception("Non-existing account!");
 					}
 					response.close();
 					client.close();
+					dispose();
 				} catch(Exception ex) {
 					Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();

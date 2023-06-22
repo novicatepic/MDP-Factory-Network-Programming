@@ -26,18 +26,22 @@ public class StartDistributorForm extends JFrame {
 
 	private JPanel contentPane;
 
-	//didn't put these into config file because of File.separator, this seems more precise
+	//Didn't put these into config file because of File.separator, this seems more precise
 	public static final String RESOURCE_PATH="resources";
 	public static final String DISTRIBUTORS_PATH=".."+File.separator+"Distributors"+File.separator;
 	public static final String FACTORY_DISTRIBUTORS_PATH=".."+File.separator+"FactoryDistributors"+File.separator;
 	public static final ArrayList<String> distributors = new ArrayList<>();
 	
+	//Add distributors that Factory connected with
+	//Factory has it's own folder in which files with the names of Distributors are containted
+	//Every time application starts, these files are loaded
+	//The idea is that factory doesn't know anything about distributors
 	public void populateDistributors() {
 		try {
 			File f = new File(FACTORY_DISTRIBUTORS_PATH);
 			File[] files = f.listFiles();
 			for(File fi : files) {
-				if(!distributors.contains(fi.getName()))
+				if(fi!=null && !distributors.contains(fi.getName()))
 					distributors.add(fi.getName());
 			}
 		} catch(Exception e) {
@@ -79,14 +83,26 @@ public class StartDistributorForm extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					populateDistributors();
-					//System.out.println(distributors.get(0));
 					ChooseDistributorForm cdf = new ChooseDistributorForm();
-					File f1 = new File(DISTRIBUTORS_PATH);
-					File[] files = f1.listFiles();
 					ArrayList<String> trimmedFiles = new ArrayList<>();
+					//I used distributors path, but should use factory distributors path, old implementation 
+					/*File f1 = new File(DISTRIBUTORS_PATH);
+					File[] files = f1.listFiles();
 					for(File f : files) {
+						System.out.println(f.getName());
 						if(!distributors.contains(f.getName().substring(0, f.getName().length()-4))) {
+							
 							trimmedFiles.add(f.getName().substring(0, f.getName().length()-4));
+						}						
+					}*/
+					
+					//In this implementation, Factory doesn't know anything about distributors
+					File f2 = new File(FACTORY_DISTRIBUTORS_PATH);
+					File[] files2 = f2.listFiles();
+					for(File f : files2) {
+						//System.out.println(f.getName());
+						if(!distributors.contains(f.getName())) {
+							trimmedFiles.add(f.getName());
 						}						
 					}
 					cdf.populateData(trimmedFiles);
@@ -106,11 +122,9 @@ public class StartDistributorForm extends JFrame {
 		productsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//Show form for checking distributors product
 					populateDistributors();
 					ChooseWhoToBuyFromForm c = new ChooseWhoToBuyFromForm();
-					for(String s : distributors) {
-						System.out.println("DIST="+s);
-					}
 					c.populateData(distributors);
 					c.setVisible(true);
 				} catch(Exception ex) {

@@ -3,6 +3,7 @@ package org.unibl.etf.mdp.buyer.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+//Same as BuyerProject order, it has to be in the same module because of XMLEncoder
 public class Product implements Serializable {
 
 	private String name;

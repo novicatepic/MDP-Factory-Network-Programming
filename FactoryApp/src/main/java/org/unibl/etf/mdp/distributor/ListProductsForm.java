@@ -56,11 +56,6 @@ public class ListProductsForm extends JFrame {
 		}
 	}
 	
-	private String file;
-	public void setFile(String f) {
-		file = f;
-	}
-	
 	JFrame frame = new JFrame("Requests table");
 	public ListProductsForm() {
         frame.getContentPane().setLayout(null);
@@ -71,15 +66,18 @@ public class ListProductsForm extends JFrame {
         		try {
         			int enteredAmount = Integer.parseInt(amountField.getText());
             		int selectedItem = table.getSelectedRow();
+            		//Find which item was selected 
+            		//If entered amount is higher than real amount, throw an exception
+            		//Else write new product to a factory
+            		//Or update amount of the existing product
             		for(int i=0; i<products.size(); i++) {
             			if(selectedItem==i) {
             				if(products.get(i).getAmount() < enteredAmount) {
             					throw new Exception("Amount must be lower than real amount!");
             				}
-            				//System.out.println(products.get(i).getName());
+
             				boolean contains = ProductService.products.contains(products.get(i).getName());
             				if(contains) {
-            					System.out.println("CONTAINS");
             					Product temp = null;
             					ArrayList<Product> prods = ProductService.readProducts();
             					for(Product p : prods) {
@@ -89,22 +87,23 @@ public class ListProductsForm extends JFrame {
             					}
             					if(temp != null) {
             						temp.setAmount(temp.getAmount()+enteredAmount);
-            						System.out.println(temp.getName());
-            						System.out.println(temp.getAmount());
             						ProductService.updateProduct(temp);
             					}
+            					
             				} else {
-            					System.out.println("DOESN'T CONTAIN");
             					Product temp = new Product(products.get(i).getName(), enteredAmount, products.get(i).getPrice());
             					ProductService.addProduct(temp);
             				}   
             				products.get(i).setAmount(products.get(i).getAmount()-enteredAmount); 
             			}
             		}
+            		//Write updated products to the RMI server side!
+            		//Again, client doesn't really know where server stores it's own files
             		String name="Distributor";
 					Registry registry = LocateRegistry.getRegistry(1099);
 					DistributorInterface dif = (DistributorInterface) registry.lookup(name);
 					dif.writeUpdatedProducts(products);
+					frame.dispose();
         		} catch(Exception ex) {
         			Logger.getLogger(ChooseWhoToBuyFromForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
         			ex.printStackTrace();

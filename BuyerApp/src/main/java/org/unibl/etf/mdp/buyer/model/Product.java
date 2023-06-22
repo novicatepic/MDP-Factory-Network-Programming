@@ -2,6 +2,7 @@ package org.unibl.etf.mdp.buyer.model;
 
 import java.util.Objects;
 
+//Each product contains name, amount and price attribute
 public class Product {
 
 	private String name;

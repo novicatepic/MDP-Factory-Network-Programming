@@ -84,6 +84,7 @@ public class PromotionTextForm extends JFrame {
 		sendTextButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//Establish multicast socket and send a multicast message to all of the clients 
 					MulticastSocket socket = new MulticastSocket();
 					InetAddress address = InetAddress.getByName(MULTICAST_HOST);
 					String message = messageField.getText();

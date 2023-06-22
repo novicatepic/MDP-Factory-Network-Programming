@@ -109,6 +109,7 @@ public class StartForm extends JFrame {
 		
 		JButton requestsButton = new JButton("CHECK REQUESTS");
 		requestsButton.addActionListener(new ActionListener() {
+			//Parse requests in JSON file and populate corresponding Table with requests
 			public void actionPerformed(ActionEvent e) {
 				try {
 					File sourceDir = new File(REQUESTS_PATH);

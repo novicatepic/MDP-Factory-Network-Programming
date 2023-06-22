@@ -9,14 +9,11 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
 import org.unibl.etf.mdp.model.User;
 import org.unibl.etf.mdp.properties.PropertiesService;
-
 import com.google.gson.Gson;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -27,6 +24,8 @@ public class ProductService {
 	private static JedisPool pool = new JedisPool("localhost");
 	private static Jedis jedis = pool.getResource();
 	
+	//Test function when started working
+	//Never really used
 	public static void writeProducts() {
 		try {
 			jedis.set(instanceName, "OK");
@@ -38,18 +37,29 @@ public class ProductService {
 		}	
 	}
 	
-	public static void addProduct(Product p) {
+	//Not a good implementation
+	//If product already exists, update amount
+	//Else create a new product
+	//There is update also
+	public static void addProduct(Product p) throws Exception {
+		if(p.getName()!=null && p.getName().contains("/")) {
+			throw new Exception("Invalid name!");
+		}
 		products = readProducts();
 		if(products.contains(p)) {
 			int index = products.indexOf(p);
+			//Update amount
 			products.get(index).setAmount(products.get(index).getAmount()+p.getAmount());
 			String product;
 			jedis.set(instanceName, "OK");
+			//Pop all the products
 			while((product=jedis.rpop(instanceName + ":students:strings"))!=null) {	}
 			for (Product pr : products) {
+				//Write back updated products
 				jedis.lpush(instanceName + ":students:strings", pr.toString());
 			}
 		} else {
+			//Add a new product, pop all the other products and write the old one
 			products.add(p);
 			String product;
 			jedis.set(instanceName, "OK");
@@ -60,6 +70,9 @@ public class ProductService {
 		}
 	}
 	
+	//Read products
+	//I wrote strings to a file, read them and parsed them -> / was a special sign
+	//It was better to use JSON, but since I've used it a lot in this project, I wanted to try something new
 	public static ArrayList<Product> readProducts() {
 		ArrayList<Product> result = new ArrayList<>();
 		try {
@@ -78,6 +91,7 @@ public class ProductService {
 		return result;
 	}
 	
+	//Delete the product and rewrite the products
 	public static boolean deleteProduct(String name) {
 		products=readProducts();
 		Product pr = new Product(name);
@@ -95,6 +109,7 @@ public class ProductService {
 		return true;
 	}
 	
+	//Update changed product
 	public static boolean updateProduct(Product product) {
 		products=readProducts();
 		if(!products.contains(product)) {
@@ -117,6 +132,9 @@ public class ProductService {
 		return true;
 	}
 	
+	//Get product names from all the distributors and all the factory products
+	//To check if there is a duplicate when creating a new product
+	//Each product needs a unique name
 	public static final String PATH=".."+File.separator+"Distributors"+File.separator;
 	public static ArrayList<String> productNames() throws IOException {
 		ArrayList<String> names = new ArrayList();

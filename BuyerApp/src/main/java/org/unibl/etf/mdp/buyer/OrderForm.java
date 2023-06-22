@@ -47,6 +47,8 @@ public class OrderForm extends JFrame {
         JButton createOrderButton = new JButton("CREATE ORDER");
         createOrderButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		//Get which product(s) client selected and pass them to another form
+        		//So that the user can select amount for each product
         		int[] selectedItems = table.getSelectedRows();
         		Integer[] selectedItemsInteger = new Integer[selectedItems.length];
         		for(int i=0; i<selectedItems.length; i++) {
@@ -69,7 +71,7 @@ public class OrderForm extends JFrame {
         createOrderButton.setBounds(519, 328, 373, 100);
         frame.getContentPane().add(createOrderButton);
         
-        JLabel lblNewLabel = new JLabel("SELECT MUTIPLE ORDERS IN TABLE");
+        JLabel lblNewLabel = new JLabel("SELECT PRODUCT(S) IN TABLE");
         lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
         lblNewLabel.setBounds(49, 328, 272, 100);
@@ -81,6 +83,7 @@ public class OrderForm extends JFrame {
 	JTable table;
 	private List<Product> products = new ArrayList<>();
 	private DefaultTableModel model;
+	//Populate table with products, easier to work with JTable
 	public void populateData(List<Product> ps) {
 		this.products = ps;
 		Object[] columnHeaders = {"Name", "Amount", "Price"};

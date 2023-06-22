@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -55,6 +56,11 @@ public class CreateForm extends JFrame {
 	
 	private static String URI_BASE;
 	
+	/*private static DefaultTableModel model;
+	public void setModel(DefaultTableModel model) {
+		CreateForm.model = model;
+	}*/
+	
 	public CreateForm() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 501, 345);
@@ -103,6 +109,7 @@ public class CreateForm extends JFrame {
 		JButton createProductButton = new JButton("CREATE");
 		createProductButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Try to create a product, if it doesn't exist
 				try {
 					String prName = nameField.getText();
 					Integer amount = Integer.valueOf(amountField.getText());
@@ -112,6 +119,8 @@ public class CreateForm extends JFrame {
 						throw new Exception("Couldn't add product, already exists!");
 					}
 					ProductService.addProduct(product);
+					dispose();
+					//model.fireTableDataChanged();
 				} catch(Exception ex) {
 					Logger.getLogger(CreateForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();

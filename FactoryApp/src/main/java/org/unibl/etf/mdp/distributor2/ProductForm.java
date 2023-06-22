@@ -98,6 +98,8 @@ public class ProductForm extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//Let distributor create a new product
+					//Check if options are correct
 					String name = nameField.getText();
 					Integer amount = Integer.valueOf(amountField.getText());
 					Double price = Double.valueOf(priceField.getText());
@@ -115,8 +117,10 @@ public class ProductForm extends JFrame {
 					Gson gson = new Gson();
 					PrintWriter pw = new PrintWriter(new FileWriter(new File(PATH+StartForm.distributor.getName()+".txt"), true), true);
 					pw.println(gson.toJson(newProduct));
-					pw.close();				
+					pw.close();			
+					dispose();
 				} catch(Exception ex) {
+					dispose();
 					Logger.getLogger(ProductForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
 				}				

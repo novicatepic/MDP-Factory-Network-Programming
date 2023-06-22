@@ -40,6 +40,7 @@ public class ProductsTableForm extends JFrame {
 	JTable table;
 	private List<Product> products = new ArrayList<>();
 	private DefaultTableModel model;
+	//Show products, just populate JTable with Products
 	public void populateData(List<Product> ps) {
 		this.products = ps;
 		Object[] columnHeaders = {"Name", "Amount", "Price"};

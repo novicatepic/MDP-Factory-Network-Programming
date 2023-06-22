@@ -2,6 +2,7 @@ package org.unibl.etf.mdp.buyer.model;
 
 import java.io.Serializable;
 
+//Every user has company name, email address, contact phone, password and whether he is suspended or not
 public class User implements Serializable {
 
 	private String companyName;

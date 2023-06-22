@@ -51,6 +51,7 @@ public class RegisterUserForm extends JFrame {
 	}
 	
 	{
+		//Read REST connection URI
 		URI_BASE=PropertiesService.getElement("REGISTER_REST");
 	}
 	
@@ -135,6 +136,9 @@ public class RegisterUserForm extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//Read input parameters and send them using REST as a post request
+					//Server side will process the request and put it in a file on the "server side"
+					//Later factory user will process the registration request
 					String companyName = nameField.getText();
 					String address = addressField.getText();
 					String phone = phoneField.getText();
@@ -150,9 +154,11 @@ public class RegisterUserForm extends JFrame {
 					Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(user, MediaType.APPLICATION_JSON));
 					response.close();
 					client.close();
+					dispose();
 				} catch(Exception ex) {
 					Logger.getLogger(RegisterUserForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
 					ex.printStackTrace();
+					dispose();
 				}				
 			}
 		});

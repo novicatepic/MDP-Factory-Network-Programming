@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import org.unibl.etf.mdp.buyer.model.Product;
 import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
+import org.unibl.etf.mdp.distributor.StartDistributorForm;
 import org.unibl.etf.mdp.distributor2.ProductForm;
 import org.unibl.etf.mdp.properties.PropertiesService;
 
@@ -47,14 +48,13 @@ public class DistributorClass implements DistributorInterface {
 		ArrayList<Product> products = new ArrayList<>();
 		try {
 			Gson gson = new Gson();
-			File f = new File(ProductForm.PATH+name);
+			File f = new File(StartDistributorForm.DISTRIBUTORS_PATH+ProductForm.PATH+name);
 			fileName=ProductForm.PATH+name;
 			BufferedReader br = new BufferedReader(new FileReader(f));
 			String line="", content="";
 			while((line = br.readLine()) != null) {
 				content += line;
 			}
-			System.out.println("CONTENT = " + content);
 			if(!"".equals(content)) {
 				String[] split = content.split("}");
 				for(int i=0; i<split.length; i++) {		
@@ -85,10 +85,7 @@ public class DistributorClass implements DistributorInterface {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		/*ArrayList<Product> prs = new DistributorClass().getDistributorProducts("D1");
-		for(Product p : prs) {
-			System.out.println(p);
-		}*/
+		//Classic code
 		System.setProperty("java.security.policy", PATH+File.separator+"server_policyfile.txt");
 		if(System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());

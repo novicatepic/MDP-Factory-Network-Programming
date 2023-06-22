@@ -2,8 +2,9 @@ package org.unibl.etf.mdp.model;
 
 import java.util.ArrayList;
 import java.util.Objects;
-
 import org.unibl.etf.mdp.buyer.model.Product;
+
+//Each distributor contains a name and a list of products
 public class Distributor {
 
 	private String name;	

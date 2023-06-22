@@ -1,17 +1,11 @@
 package org.unibl.etf.mdp.operator;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
-import org.unibl.etf.mdp.model.Operator;
-import org.unibl.etf.mdp.model.User;
 import org.unibl.etf.mdp.properties.PropertiesService;
-
-import com.google.gson.Gson;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -65,6 +59,7 @@ public class OrderStartForm extends JFrame {
 		}
 	}
 	
+	//Read required parameters
 	{
 		HOST=PropertiesService.getElement("LOCAL_HOST");
 		PORT=Integer.valueOf(PropertiesService.getElement("PORT_8443"));
@@ -102,7 +97,8 @@ public class OrderStartForm extends JFrame {
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					//ArrayList<Operator> operators = readExistsingOperators();
+					//Logging in requires secure communication, which is established 
+					//A protocol is being followed
 					System.setProperty("javax.net.ssl.trustStore", KEY_STORE_PATH);
 					System.setProperty("javax.net.ssl.trustStorePassword", KEY_STORE_PASSWORD);
 					SSLSocketFactory sf = (SSLSocketFactory)SSLSocketFactory.getDefault();

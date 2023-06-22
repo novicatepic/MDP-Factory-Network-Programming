@@ -10,6 +10,7 @@ import javax.xml.validation.Validator;
 
 public class TestValidate {
 
+	//Test class
 	public static void main(String[] args) {
 		try {
 			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);

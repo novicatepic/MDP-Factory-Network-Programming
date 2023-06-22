@@ -3,6 +3,7 @@ package org.unibl.etf.mdp.buyer.model;
 import java.util.ArrayList;
 import java.util.List;
 
+//Same as BuyerProject order, it has to be in the same module because of XMLEncoder
 public class Order {
 
 	private String userName;
@@ -53,10 +54,10 @@ public class Order {
 
 	public String printProductsAndAmounts() {
 		String result="";
-		result+="ORDER: \n";
+		result+="ORDER: ";
 		//System.out.println("ORDER: ");
 		for(int i=0; i<products.size(); i++) {
-			result+="Name: " + products.get(i).getName() + " Amount: " + amounts.get(i) + "\n";
+			result+="Name: " + products.get(i).getName() + " Amount: " + amounts.get(i) + " ";
 			/*System.out.print("Name: " + products.get(i).getName() + " Amount: " + amounts.get(i));
 			System.out.println();*/
 		}

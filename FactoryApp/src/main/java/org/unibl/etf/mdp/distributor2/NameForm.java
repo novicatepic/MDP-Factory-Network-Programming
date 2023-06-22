@@ -48,7 +48,9 @@ public class NameForm extends JFrame {
 		JButton submitButton = new JButton("SUBMIT");
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Choose the distributor, all the other things will be known based on that name and files
 				StartForm.distributor.setName(nameField.getText());
+				dispose();
 			}
 		});
 		submitButton.setFont(new Font("Tahoma", Font.PLAIN, 14));

@@ -1,1 +1,0 @@
-PRIHVACENA NARUDZBA Order [userName=novica, address=novica, products=[Ljava.lang.Object;@629142a3, amounts=[Ljava.lang.Object;@acd3c7b] OD OPERATORA Operator [userName=Operator1]

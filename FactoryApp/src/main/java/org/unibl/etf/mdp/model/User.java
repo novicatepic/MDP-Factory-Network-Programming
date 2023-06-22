@@ -2,6 +2,7 @@ package org.unibl.etf.mdp.model;
 
 import java.io.Serializable;
 
+//Same as in Factory (had to copy)
 public class User implements Serializable {
 
 	private String companyName;

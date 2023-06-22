@@ -36,6 +36,7 @@ public class ProductsForm extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		CreateForm cf = new CreateForm();
         		cf.setVisible(true);
+        		frame.dispose();
         	}
         });
         frame.getContentPane().setLayout(null);
@@ -51,6 +52,7 @@ public class ProductsForm extends JFrame {
         		UpdateForm uf = new UpdateForm();
         		uf.populateData(p);
         		uf.setVisible(true);
+        		frame.dispose();
         	}
         });
         updateButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -60,6 +62,8 @@ public class ProductsForm extends JFrame {
         JButton deleteButton = new JButton("DELETE");
         deleteButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		//Delete a product and immediately update table
+        		//Also, update Redis!
         		int selectedRow = table.getSelectedRow();
         		model.removeRow(selectedRow);
         		String name="";
@@ -69,7 +73,6 @@ public class ProductsForm extends JFrame {
         				products.remove(i);
         			}
         		}
-        		System.out.println("NAME="+name);
         		if(!"".equals(name)) {
         			ProductService.deleteProduct(name);
         		}       		
@@ -85,6 +88,8 @@ public class ProductsForm extends JFrame {
 	JTable table;
 	private List<Product> products = new ArrayList<>();
 	private DefaultTableModel model;
+	
+	//Populate table with products
 	public void populateData(List<Product> ps) {
 		this.products = ps;
 		Object[] columnHeaders = {"Name", "Amount", "Price"};

@@ -10,6 +10,8 @@ import org.unibl.etf.mdp.model.Operator;
 
 import com.google.gson.Gson;
 
+//Class to populate operators
+//There wasn't anything particular in the specification, so I did it this way
 public class PopulateOperators {
 
 	public static final String PATH=".."+File.separator+"Users"+File.separator+"factory_users.json";

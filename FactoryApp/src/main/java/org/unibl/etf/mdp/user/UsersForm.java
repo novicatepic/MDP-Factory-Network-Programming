@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -52,6 +53,7 @@ public class UsersForm extends JFrame {
 	public UsersForm() {
         JButton suspendButton = new JButton("SUSPEND/UNSUSPEND");
         suspendButton.addActionListener(new ActionListener() {
+        	//Suspend or unsuspend the user and rewrite content in users file
         	public void actionPerformed(ActionEvent e) {
         		try {
         			File sourceFile = new File(StartForm.USERS_PATH);
@@ -73,7 +75,7 @@ public class UsersForm extends JFrame {
                 	for(User u : users) {
                 		pw.println(gson.toJson(u));
                 	}
-                	
+                	frame.dispose();
         			pw.close();
         		} catch(Exception ex) {
         			Logger.getLogger(UsersForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
@@ -88,6 +90,8 @@ public class UsersForm extends JFrame {
         
         JButton deleteButton = new JButton("DELETE");
         deleteButton.addActionListener(new ActionListener() {
+        	//Delete user and immediately update the table
+        	//Also, rewrite the file
         	public void actionPerformed(ActionEvent e) {
         		try {
         			File sourceFile = new File(StartForm.USERS_PATH);
@@ -110,8 +114,7 @@ public class UsersForm extends JFrame {
                 	PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(StartForm.USERS_PATH)), true);
                 	for(User nu : newUsers) {
                 		pw.println(gson.toJson(nu));
-                	}
-                	
+                	}              	
         			pw.close();
         		} catch(Exception ex) {
         			Logger.getLogger(UsersForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
@@ -130,6 +133,7 @@ public class UsersForm extends JFrame {
 	JTable table;
 	private ArrayList<User> users = new ArrayList<>();
 	private DefaultTableModel model;
+	//Populate table with user data
 	public void populateData(ArrayList<User> users) {
 		this.users = users;
 		Object[] columnHeaders = {"Company", "Address", "Phone", "User name", "Password", "Suspended"};

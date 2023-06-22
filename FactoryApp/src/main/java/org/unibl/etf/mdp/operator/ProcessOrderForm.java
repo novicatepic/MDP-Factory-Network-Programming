@@ -21,7 +21,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -38,7 +37,6 @@ import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
 import org.unibl.etf.mdp.mq.ConnectionFactoryUtil;
 import org.unibl.etf.mdp.product.ProductService;
 import org.unibl.etf.mdp.properties.PropertiesService;
-
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -46,7 +44,6 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.GetResponse;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -110,15 +107,17 @@ public class ProcessOrderForm extends JFrame {
 		acceptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//When we accept an order, we need to establish secure connection, so server side can write message to a file
 					System.setProperty("javax.net.ssl.trustStore", KEY_STORE_PATH);
 					System.setProperty("javax.net.ssl.trustStorePassword", KEY_STORE_PASSWORD);
 					SSLSocketFactory sf = (SSLSocketFactory)SSLSocketFactory.getDefault();
 					SSLSocket s = (SSLSocket) sf.createSocket(HOST, PORT);
 					PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream())), true);
-					out.println(GEN_INFO);
-					String mesToSend = "ACCEPTED ORDER " + order + " FROM OPERATOR " + operator;
-					out.println(mesToSend);
+					out.println(GEN_INFO);				
 					ArrayList<Product> prodService = ProductService.readProducts();
+					//If there were two or more orders to the same product and one was accepted
+					//Next one would be invalid if we got to the point where amount was lower than zero
+					//So we throw an exception
 					for(int i=0; i<prodService.size(); i++) {
 						if(order.getProducts().contains(prodService.get(i))) {
 							int pos = order.getProducts().indexOf(prodService.get(i));
@@ -127,11 +126,15 @@ public class ProcessOrderForm extends JFrame {
 							}
 						}
 					}
+					String mesToSend = "ACCEPTED ORDER " + order + " FROM OPERATOR " + operator;
+					System.out.println("MSSG FROM ORDER="+mesToSend);
+					//Send to the server side
+					out.println(mesToSend);
 					for(int i=0; i<order.getProducts().size(); i++) {
 						order.getProducts().get(i).setAmount(order.getProducts().get(i).getAmount()-Integer.valueOf(order.getAmounts().get(i)));
 						ProductService.updateProduct(order.getProducts().get(i));
 					}
-					
+					//Send mail
 					boolean status = sendMail(order.getAddress(), "Order notification success", mesToSend);
 					out.close();
 					s.close();
@@ -148,14 +151,16 @@ public class ProcessOrderForm extends JFrame {
 		rejectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//Establish secure socket
 					System.setProperty("javax.net.ssl.trustStore", KEY_STORE_PATH);
 					System.setProperty("javax.net.ssl.trustStorePassword", KEY_STORE_PASSWORD);
 					SSLSocketFactory sf = (SSLSocketFactory)SSLSocketFactory.getDefault();
 					SSLSocket s = (SSLSocket) sf.createSocket(HOST, PORT);
 					PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream())), true);
 					String mesToSend = "REJECTED ORDER " + order + " FROM OPERATOR " + operator;
+					System.out.println("MSSG FROM ORDER="+mesToSend);
 					out.println(GEN_INFO);
-					out.println("REJECTED ORDER " + order + " FROM OPERATOR " + operator);
+					out.println(mesToSend);
 					boolean status = sendMail(order.getAddress(), "Order notification failure", mesToSend);
 					out.close();
 					s.close();
@@ -220,56 +225,13 @@ public class ProcessOrderForm extends JFrame {
 	public void setOperator(String op) {
 		operator=op;
 	}
-	
-	public static void sendEmail(Session session, String toEmail, String subject, String body){
-		try
-	    {
-	      MimeMessage msg = new MimeMessage(session);
-	      //set message headers
-	      msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
-	      msg.addHeader("format", "flowed");
-	      msg.addHeader("Content-Transfer-Encoding", "8bit");
-	      msg.setFrom(new InternetAddress("no_reply@example.com", "NoReply-JD"));
-	      msg.setReplyTo(InternetAddress.parse("no_reply@example.com", false));
-	      msg.setSubject(subject, "UTF-8");
-	      msg.setText(body, "UTF-8");
-	      msg.setSentDate(new Date());
-	      msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
-	      System.out.println("Message is ready");
-    	  Transport.send(msg);  
 
-	      System.out.println("EMail Sent Successfully!!");
-	    }
-	    catch (Exception e) {
-	    	Logger.getLogger(ProcessOrderForm.class.getName()).log(Level.SEVERE, e.fillInStackTrace().toString());
-	      e.printStackTrace();
-	    }
-	}
-
+	//Different MQ implementation
+	//This way I can get orders one by one, not all in one try
 	public void processOrder() throws Exception {
 		Connection connection = ConnectionFactoryUtil.createConnection();
 		Channel channel = connection.createChannel();
-		channel.queueDeclare(QUEUE, false, false, false, null);
-		//channel.basicQos(1);	
-		
-		//String message = "";
-		//final String[] messages = new String[1]; 
-		/*Consumer consumer = new DefaultConsumer(channel) {
-			@Override
-			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
-					byte[] body) throws IOException {
-				String message = new String(body, "UTF-8");
-				System.out.println("Message received: " + message);
-				PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("./message.xml", true)), true);
-				pw.println(message);
-				pw.close();
-				channel.basicAck(envelope.getDeliveryTag(), false);
-				return;
-			}
-		};*/
-		
-		//channel.basicConsume("order", false, consumer);
-		
+		channel.queueDeclare(QUEUE, false, false, false, null);		
 		GetResponse response = channel.basicGet(QUEUE, true);
 		if (response != null) {
 		    String message = new String(response.getBody(), "UTF-8");
@@ -284,20 +246,23 @@ public class ProcessOrderForm extends JFrame {
 	private Order order;
 	public void setXML() {
 		try {
+			//Get the string
 			processOrder();
 			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Schema schema = factory.newSchema(new File("./internetschema.xsd"));
 			Validator validator = schema.newValidator();
 			
+			//Read XML content
 			BufferedReader br = new BufferedReader(new FileReader(new File("./message.xml")));
 			String str = "";
 			while((str = br.readLine()) != null) {
 				xml += str;
 			}
 			br.close();
-			System.out.println("READ XML = " + xml);
+
+			//Validate it with validator based on schema
 			validator.validate(new StreamSource(new File("./message.xml")));
-			
+			//Decode order based on XML decoder
 			InputStream xmlFile = new FileInputStream("./message.xml");
 			XMLDecoder decoder = new XMLDecoder(xmlFile);
 			Object decodedObject = decoder.readObject();
@@ -305,6 +270,7 @@ public class ProcessOrderForm extends JFrame {
 				order = (Order)decodedObject;
 				userNameLabel.setText(order.getUserName());
 				addressLabel.setText(order.getAddress());
+				//Populate grid layout with info
 				panel.setLayout(new GridLayout(order.getProducts().size()+1, 3));
 				for(int i=0; i<order.getProducts().size()+1; i++) {
 					for(int j=0; j<3; j++) {
@@ -344,6 +310,9 @@ public class ProcessOrderForm extends JFrame {
 		}		
 	}
 	
+	//Copied implementation
+	//Load gmail properties from property file
+	//Password for the account is not the classic password, we use 2-step authentication password for applications
 	String username="", password="";
 	private Properties loadMailConfig() throws FileNotFoundException, IOException {
 		Properties serverprop = new Properties();
@@ -361,7 +330,7 @@ public class ProcessOrderForm extends JFrame {
 	}
 
 	private boolean sendMail(String to, String title, String body) throws FileNotFoundException, IOException {
-
+		//Load parameters
 		Properties props = loadMailConfig();
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
@@ -369,6 +338,7 @@ public class ProcessOrderForm extends JFrame {
 			}
 		});
 
+		//Make a message and send it
 		try {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(username));

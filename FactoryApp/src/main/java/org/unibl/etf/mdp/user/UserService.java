@@ -27,6 +27,8 @@ public class UserService {
 	private static ArrayList<User> users = new ArrayList<>();
 	public static final String PATH = "." + File.separator + "MDP-Project" + File.separator + "RegistrationRequests" + File.separator;
 	
+	//When user makes a request, REST is called and it writes new request to a file
+	//REST default place for files is Desktop
 	public static boolean createUser(User u) {
 		String fileName = u.getUserName();
 		Gson gson = new Gson();
@@ -44,13 +46,12 @@ public class UserService {
 		return true;
 	}
 	
+	//REST calls this method to check if user with username and password exists
 	public static User checkCredentials(User user) {
 		User returnUser = null;
-		try {
-			
+		try {		
 			ArrayList<User> readUsers = readExistsingUsers();
 			for(User u : readUsers) {
-				//System.out.println(u);
 				if(u.getUserName().equals(user.getUserName()) && u.getPassword().equals(user.getPassword())) {
 					returnUser = u;
 					return returnUser;
@@ -59,12 +60,11 @@ public class UserService {
 			return null;
 		} catch(Exception e) {
 			e.printStackTrace();
-		}
-		
-		
+		}	
 		return null;
 	}
 	
+	//Read all of the users from the JSON file
 	private static final String USERS_PATH = "." + File.separator + "MDP-Project" + File.separator + "Users" + File.separator + "users.json";
 	private static ArrayList<User> readExistsingUsers() throws Exception {
 		Gson gson = new Gson();
@@ -76,7 +76,6 @@ public class UserService {
 		while((line = br.readLine()) != null) {
 			content += line;
 		}
-		System.out.println("CONTENT = " + content);
 		if(!"".equals(content)) {
 			String[] split = content.split("}");
 			for(int i=0; i<split.length; i++) {		

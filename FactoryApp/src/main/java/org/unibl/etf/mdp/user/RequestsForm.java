@@ -53,6 +53,7 @@ public class RequestsForm extends JFrame {
 	public RequestsForm() {
         JButton rejectButt = new JButton("REJECT");
         rejectButt.addActionListener(new ActionListener() {
+        	//Reject request for a new profile, immediately update table and delete a request file
         	public void actionPerformed(ActionEvent e) {
         		int[] selectedRows = table.getSelectedRows();
                 if (selectedRows.length > 0) {
@@ -74,6 +75,7 @@ public class RequestsForm extends JFrame {
         
         JButton acceptButt = new JButton("ACCEPT");
         acceptButt.addActionListener(new ActionListener() {
+        	//Add a new user and delete a file with the request
         	public void actionPerformed(ActionEvent e) {
         		try {
         			Gson gson = new Gson();
@@ -106,6 +108,7 @@ public class RequestsForm extends JFrame {
             				pw.close();
             			}
             		}
+            		frame.dispose();
         		} catch(Exception ex) {
         			Logger.getLogger(RequestsForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());
         			ex.printStackTrace();
@@ -122,6 +125,7 @@ public class RequestsForm extends JFrame {
 	JTable table;
 	private ArrayList<User> users = new ArrayList<>();
 	private DefaultTableModel model;
+	//Populate JTable with data
 	public void populateData(ArrayList<User> users) {
 		this.users = users;
 		Object[] columnHeaders = {"Company", "Address", "Phone", "User name", "Password"};

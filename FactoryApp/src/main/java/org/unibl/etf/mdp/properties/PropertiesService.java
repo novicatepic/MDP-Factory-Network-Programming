@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
 
+//Read config properties
 public class PropertiesService {
 
 	static {

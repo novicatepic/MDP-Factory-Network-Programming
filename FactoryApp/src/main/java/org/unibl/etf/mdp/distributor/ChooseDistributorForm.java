@@ -65,6 +65,7 @@ public class ChooseDistributorForm extends JFrame {
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//Connect with a distributor (write a new file)
 					String str = (String)disBox.getSelectedItem();
 					StartDistributorForm.distributors.add(str);
 					File f = new File(StartDistributorForm.FACTORY_DISTRIBUTORS_PATH+str);

@@ -42,9 +42,7 @@ public class AfterLoginForm extends JFrame {
 	
 	private static String URI_BASE;
 	
-	/**
-	 * Create the frame.
-	 */
+
 	public AfterLoginForm() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
@@ -64,6 +62,7 @@ public class AfterLoginForm extends JFrame {
 		JButton checkProductsButton = new JButton("CHECK PRODUCTS");
 		checkProductsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Make get request to get all the products from Factory side and send them to the next form
 				Client client = ClientBuilder.newClient();
 				WebTarget target = client.target(URI_BASE);
 				Response response = target.request(MediaType.APPLICATION_JSON).get();				
@@ -81,6 +80,7 @@ public class AfterLoginForm extends JFrame {
 		JButton createOrderButton = new JButton("CREATE AN ORDER");
 		createOrderButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Again, read products and enable user to make an order
 				Client client = ClientBuilder.newClient();
 				WebTarget target = client.target(URI_BASE);
 				Response response = target.request(MediaType.APPLICATION_JSON).get();				

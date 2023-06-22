@@ -21,8 +21,11 @@ public class RestRegistration {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addProizvod(User u) {
 		if(org.unibl.etf.mdp.user.UserService.createUser(u)) {
+			//We've created something if we've written it to a file, and that is a request
+			//OK would be good also
 			return Response.status(201).build();
 		} else {
+			//Because it's just writting to a file, there is an error on the server side if something goes wrong
 			return Response.status(500).build();
 		}
 	}

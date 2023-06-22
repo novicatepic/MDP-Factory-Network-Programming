@@ -2,6 +2,7 @@ package org.unibl.etf.mdp.model;
 
 import java.util.Objects;
 
+//Operator only has one attribute, as per project specification (no password)
 public class Operator {
 
 	private String userName;

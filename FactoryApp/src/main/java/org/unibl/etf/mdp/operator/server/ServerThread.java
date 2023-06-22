@@ -15,11 +15,9 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm;
 import org.unibl.etf.mdp.model.Operator;
 import org.unibl.etf.mdp.properties.PropertiesService;
-
 import com.google.gson.Gson;
 
 public class ServerThread extends Thread {
@@ -70,6 +68,8 @@ public class ServerThread extends Thread {
 	public void run() {
 		try {
 			String option = in.readLine();
+			//Separate login from writting to a file
+			//Follow the protocol
 			if(LOGIN_MESSAGE.equals(option)) {
 				ArrayList<Operator> operators = readExistsingOperators();
 				String userName = in.readLine();
@@ -89,7 +89,9 @@ public class ServerThread extends Thread {
 				}
 			} else if(GEN_INFO_MESSAGE.equals(option)){
 				PrintWriter pw2 = new PrintWriter(new FileWriter(new File("."+File.separator+"OrderInfo"+File.separator+"file_"+new Date().getTime()+".txt"), true), true);
-				pw2.println(in.readLine());
+				String message = in.readLine();
+				System.out.println("MSSG = " + message);
+				pw2.println(message);
 				pw2.close();
 			}
 			
@@ -102,7 +104,7 @@ public class ServerThread extends Thread {
 		}		
 	}
 
-	
+	//Read operators so we can check if operator login with user name was valid or not
 	public static ArrayList<Operator> readExistsingOperators() throws Exception {
 		Gson gson = new Gson();
 		File f = new File(FACTORY_USERS_PATH);

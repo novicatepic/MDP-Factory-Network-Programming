@@ -76,16 +76,32 @@ public class ChooseWhoToBuyFromForm extends JFrame {
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					File f = new File(StartDistributorForm.DISTRIBUTORS_PATH);
+					//Old implementation
+					/*File f = new File(StartDistributorForm.DISTRIBUTORS_PATH);
 					File[] files = f.listFiles();
 					String selectedItem = (String)disBox.getSelectedItem();
 					String fileName="";
 					for(File fi : files) {
+						System.out.println(fi.getName());
 						if(fi.getName().equals(selectedItem+".txt")) {
 							fileName=fi.getName();
 							break;
 						}
+					}*/
+					
+					//New implementation, factory doesn't know anything about where distributors hold their products
+					File f = new File(StartDistributorForm.FACTORY_DISTRIBUTORS_PATH);
+					File[] files = f.listFiles();
+					String selectedItem = (String)disBox.getSelectedItem();
+					String fileName="";
+					for(File fi : files) {
+						System.out.println(fi.getName());
+						if(fi.getName().equals(selectedItem)) {
+							fileName=fi.getName();
+							break;
+						}
 					}
+					
 					if(!"".equals(fileName)) {
 						ListProductsForm lif = new ListProductsForm();
 						System.setProperty("java.security.policy", PATH+File.separator+"client_policyfile.txt");
@@ -95,11 +111,10 @@ public class ChooseWhoToBuyFromForm extends JFrame {
 						String name="Distributor";
 						Registry registry = LocateRegistry.getRegistry(1099);
 						DistributorInterface dif = (DistributorInterface) registry.lookup(name);
-						//System.out.println(fileName);
-						lif.populateData(dif.getDistributorProducts(StartDistributorForm.DISTRIBUTORS_PATH+fileName));
-						//lif.populateData(dif.getDistributorProducts(fileName));
-						lif.setFile(StartDistributorForm.DISTRIBUTORS_PATH+fileName);
-						//lif.setVisible(true);
+						lif.populateData(dif.getDistributorProducts(fileName+".txt"));
+
+						//Added txt
+						//lif.setFile(StartDistributorForm.DISTRIBUTORS_PATH+fileName+".txt");
 					}
 				} catch(Exception ex) {
 					Logger.getLogger(ChooseWhoToBuyFromForm.class.getName()).log(Level.SEVERE, ex.fillInStackTrace().toString());

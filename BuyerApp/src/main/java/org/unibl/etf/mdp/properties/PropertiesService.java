@@ -9,8 +9,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.unibl.etf.mdp.buyer.model.UserService;
-
+//Help class to read Property element based on key
 public class PropertiesService {
 
 	static {

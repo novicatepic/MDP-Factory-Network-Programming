@@ -80,9 +80,11 @@ public class OrderTakeAndGo extends JFrame {
 		processButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					//Process an order
+					//Set an operator so it is possible to write in a file and to write an email containing operator who processed the order
 					ProcessOrderForm pof = new ProcessOrderForm();
-					//pof.setXML(processOrder());
 					pof.setOperator(operator);
+					//Real processing is called with this method
 					pof.setXML();
 					pof.setVisible(true);
 				} catch(Exception ex) {

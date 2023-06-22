@@ -3,6 +3,7 @@ package org.unibl.etf.mdp.buyer.model;
 import java.util.ArrayList;
 import java.util.List;
 
+//Each order containts user name, email address, list of products and list of amounts wanted for each product
 public class Order {
 
 	private String userName;
