@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 
 public class DistributorClass implements DistributorInterface {
 	public static final String PATH = "resources";
+	private static final String DISTRIBUTORS_PATH=".."+File.separator+"Distributors"+File.separator;
 	public DistributorClass() throws RemoteException {}
 	private String fileName;
 	
@@ -44,11 +45,11 @@ public class DistributorClass implements DistributorInterface {
 	}
 	
 	@Override
-	public List<Product> getDistributorProducts(String name) throws RemoteException {
+	public synchronized List<Product> getDistributorProducts(String name) throws RemoteException {
 		ArrayList<Product> products = new ArrayList<>();
 		try {
 			Gson gson = new Gson();
-			File f = new File(StartDistributorForm.DISTRIBUTORS_PATH+ProductForm.PATH+name);
+			File f = new File(DISTRIBUTORS_PATH+ProductForm.PATH+name);
 			fileName=ProductForm.PATH+name;
 			BufferedReader br = new BufferedReader(new FileReader(f));
 			String line="", content="";
@@ -73,7 +74,7 @@ public class DistributorClass implements DistributorInterface {
 	
 
 	@Override
-	public void writeUpdatedProducts(List<Product> products) throws RemoteException, IOException {
+	public synchronized void writeUpdatedProducts(List<Product> products) throws RemoteException, IOException {
 		File f = new File(fileName);
 		f.delete();
 		Gson gson = new Gson();

@@ -28,7 +28,7 @@ public class StartDistributorForm extends JFrame {
 
 	//Didn't put these into config file because of File.separator, this seems more precise
 	public static final String RESOURCE_PATH="resources";
-	public static final String DISTRIBUTORS_PATH=".."+File.separator+"Distributors"+File.separator;
+	//public static final String DISTRIBUTORS_PATH=".."+File.separator+"Distributors"+File.separator;
 	public static final String FACTORY_DISTRIBUTORS_PATH=".."+File.separator+"FactoryDistributors"+File.separator;
 	public static final ArrayList<String> distributors = new ArrayList<>();
 	

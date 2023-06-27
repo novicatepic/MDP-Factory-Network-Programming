@@ -66,7 +66,7 @@ public class AfterLoginForm extends JFrame {
 				Client client = ClientBuilder.newClient();
 				WebTarget target = client.target(URI_BASE);
 				Response response = target.request(MediaType.APPLICATION_JSON).get();				
-				List<Product> products = response.readEntity(new GenericType<List<Product>>() {});			
+				List<Product> products = response.readEntity(new GenericType<List<Product>>() {});	
 				ProductsTableForm ptf = new ProductsTableForm();
 				ptf.populateData(products);				
 				response.close();
