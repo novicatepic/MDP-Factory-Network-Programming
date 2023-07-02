@@ -1,0 +1,1 @@
+ACCEPTED ORDER ORDER: Name: Keks Amount: 2  FROM OPERATOR Operator [userName=Operator2]

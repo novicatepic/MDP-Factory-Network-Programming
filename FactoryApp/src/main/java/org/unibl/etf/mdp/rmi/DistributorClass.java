@@ -101,4 +101,12 @@ public class DistributorClass implements DistributorInterface {
 			e.printStackTrace();
 		}
 	}
+
+
+	@Override
+	public synchronized File[] listFiles() throws RemoteException {
+		
+		File f = new File(DISTRIBUTORS_PATH);
+		return f.listFiles();
+	}
 }

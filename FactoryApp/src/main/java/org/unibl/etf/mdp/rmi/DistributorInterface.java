@@ -1,5 +1,6 @@
 package org.unibl.etf.mdp.rmi;
 
+import java.io.File;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -13,4 +14,6 @@ public interface DistributorInterface extends Remote {
 	public List<Product> getDistributorProducts(String name) throws RemoteException;
 	//After we got the products from the distributor, write updated products back
 	public void writeUpdatedProducts(List<Product> products) throws RemoteException, IOException;
+	
+	public File[] listFiles() throws RemoteException;
 }

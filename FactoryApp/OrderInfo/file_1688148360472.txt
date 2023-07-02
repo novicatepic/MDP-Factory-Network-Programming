@@ -1,0 +1,1 @@
+REJECTED ORDER ORDER: Name: PrviProizvodD3 Amount: 1  FROM OPERATOR Operator [userName=Operator2]

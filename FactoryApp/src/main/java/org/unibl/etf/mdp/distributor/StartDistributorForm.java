@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import org.unibl.etf.mdp.properties.PropertiesService;
+import org.unibl.etf.mdp.rmi.DistributorInterface;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -15,6 +16,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -28,7 +31,6 @@ public class StartDistributorForm extends JFrame {
 
 	//Didn't put these into config file because of File.separator, this seems more precise
 	public static final String RESOURCE_PATH="resources";
-	//public static final String DISTRIBUTORS_PATH=".."+File.separator+"Distributors"+File.separator;
 	public static final String FACTORY_DISTRIBUTORS_PATH=".."+File.separator+"FactoryDistributors"+File.separator;
 	public static final ArrayList<String> distributors = new ArrayList<>();
 	
@@ -82,29 +84,32 @@ public class StartDistributorForm extends JFrame {
 		connectionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					String name="Distributor";
+					Registry registry = LocateRegistry.getRegistry(1099);
+					DistributorInterface dif = (DistributorInterface) registry.lookup(name);
 					populateDistributors();
 					ChooseDistributorForm cdf = new ChooseDistributorForm();
 					ArrayList<String> trimmedFiles = new ArrayList<>();
 					//I used distributors path, but should use factory distributors path, old implementation 
-					/*File f1 = new File(DISTRIBUTORS_PATH);
-					File[] files = f1.listFiles();
+					//File f1 = new File(".."+File.separator+"Distributors"+File.separator);
+					File[] files = dif.listFiles();
 					for(File f : files) {
 						System.out.println(f.getName());
 						if(!distributors.contains(f.getName().substring(0, f.getName().length()-4))) {
 							
 							trimmedFiles.add(f.getName().substring(0, f.getName().length()-4));
 						}						
-					}*/
+					}
 					
 					//In this implementation, Factory doesn't know anything about distributors
-					File f2 = new File(FACTORY_DISTRIBUTORS_PATH);
+					/*File f2 = new File(FACTORY_DISTRIBUTORS_PATH);
 					File[] files2 = f2.listFiles();
 					for(File f : files2) {
 						//System.out.println(f.getName());
 						if(!distributors.contains(f.getName())) {
 							trimmedFiles.add(f.getName());
 						}						
-					}
+					}*/
 					cdf.populateData(trimmedFiles);
 					cdf.setVisible(true);
 				} catch(Exception ex) {

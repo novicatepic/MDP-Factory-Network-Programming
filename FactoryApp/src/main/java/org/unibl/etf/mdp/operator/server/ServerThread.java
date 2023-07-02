@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 
 public class ServerThread extends Thread {
 	private static final String FACTORY_USERS_PATH = ".." + File.separator + "Users" + File.separator + "factory_users.json";
-	private static final String ORDER_INFO_PATH = "." + File.separator + "OrderInfo" + File.separator;
 	private BufferedReader in;
 	private PrintWriter out;
 	private Socket socket;

@@ -1,0 +1,2 @@
+{"name":"D5Proizvod","amount":7,"price":14.5}
+{"name":"noviprd5","amount":15,"price":12.0}

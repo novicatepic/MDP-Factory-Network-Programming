@@ -9,3 +9,5 @@
 {"name":"PRD4Kosilica","amount":2,"price":24.5}
 {"name":"Noviprrr","amount":3,"price":11.2}
 {"name":"D4NPR","amount":5,"price":5.0}
+{"name":"Keks","amount":46,"price":5.0}
+{"name":"Sok","amount":5,"price":1.0}

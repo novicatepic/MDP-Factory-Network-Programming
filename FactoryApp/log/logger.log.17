@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-06-30T18:14:06.101936Z</date>
+  <millis>1688148846101</millis>
+  <nanos>936000</nanos>
+  <sequence>0</sequence>
+  <logger>org.unibl.etf.mdp.distributor.ChooseWhoToBuyFromForm</logger>
+  <level>SEVERE</level>
+  <class>org.unibl.etf.mdp.distributor.ListProductsForm$1</class>
+  <method>actionPerformed</method>
+  <thread>18</thread>
+  <message>java.lang.Exception: Amount must be lower than real amount!</message>
+</record>
+</log>

@@ -68,7 +68,7 @@ public class StartForm extends JFrame {
 									DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 									socket.receive(packet);
 									String received = new String(packet.getData(), 0, packet.getLength());
-									System.out.println(received); 
+									//System.out.println(received); 
 									messageLabel.setText(received);	
 								}									
 							} catch(IOException ex) {
