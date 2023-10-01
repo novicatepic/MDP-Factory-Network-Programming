@@ -13,6 +13,14 @@ The main GUI application for the factory includes an option to order raw materia
 Consider that the system can have only one running factory application, multiple customer applications, and multiple applications for raw material distributors. Any aspects not precisely defined in the text should be implemented in an arbitrary manner. Use loggers and properties files.
 
 
+![MDP-1git](https://github.com/novicatepic/MDP-Factory-Network-Programming/assets/62095336/7ad64086-1282-4815-808c-6d18c09813e5)
 
+![MDP-2git](https://github.com/novicatepic/MDP-Factory-Network-Programming/assets/62095336/eb00c542-1d9d-4163-925b-f81d49c2c2cc)
 
+![MDP-3git](https://github.com/novicatepic/MDP-Factory-Network-Programming/assets/62095336/e56eacef-d77c-4d04-8c31-62ffa9e069a4)
 
+![MDP-4git](https://github.com/novicatepic/MDP-Factory-Network-Programming/assets/62095336/361cfd90-7dce-41e5-a6c8-23c4f20bd8e8)
+
+![MDP-5git](https://github.com/novicatepic/MDP-Factory-Network-Programming/assets/62095336/e6cd05b5-d464-4de1-b453-7ade4b2b7d37)
+
+![MDP-6git](https://github.com/novicatepic/MDP-Factory-Network-Programming/assets/62095336/f634cc83-6d74-4490-bfb7-e2dff077c719)
